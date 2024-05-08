@@ -1,27 +1,76 @@
-# NetWorkClass-GDP1-
-(TeamWork) Network Class GDP1 Course Fanshawe 
+# Project Clay
+A cross-platform clay creation app for designing pottery, streamlining your creative process, and commissioning your designs from preferred shops
 
-TEAM:
-- Oops
-- Omar Almasri
-  
-BUILD INSTRUCTIONS:
-- Make sure the project is Set on " Release x64 "
-- Build Solution ( all projects including NetworkUtils which have post build script that copies dlls to $(OutDir))
+## Team (Group #)
 
-BUILD DataBase INSTRUCTIONS:
-- Go to "MySQL-dump" folder and execute Sql Command inside the 
-authenticationservice.sql 
+- Oops #######
+- Omar Almasri 
 
-once you have SQL table Created :
-- go to cBaseDAO.cpp and change the following :
-- const std::string SCHEMA = "authserver"; to "your schema Name " 
-- const std::string USER = "root"; to " your DB user Name " 
-- const std::string PWD = "root"; to your DB Password 
+## Features
 
-EXECUTION INSTRUCTIONS:
+###Account & Profile
 
-- Ensure that the project is run using Release x64
-- Ensure that you run the "Auth" project first
-- Ensure that you run the "Server" project Second
-- Once the Both are running, you can start as many "Client" instances that you'd like.
+-Create an account
+-Edit profile information (name, contact details, etc.)
+-View design history
+
+
+###Design Tools
+
+####Clay Object Design
+-Select a basic cylinder shape
+-Adjust cylinder width at various points
+
+####Shirt Design
+-Upload an image
+-Add text
+-Select basic shirt style and color
+
+####Sand Art Design
+-Choose a glass container shape
+-Select sand colors
+-Add text or basic design elements
+
+
+###Pricing & Production
+
+-View estimated material cost
+-View estimated labor cost
+-View estimated shipping cost
+-View estimated production time
+
+###Shopping & Ordering
+
+-Browse a directory of local shops
+-Filter shops by specialization (clay, shirt, sand art)
+-Submit a design to a selected shop
+-Track order status
+
+
+## Specs
+
+###Development:
+
+-Built with React Native for cross-platform compatibility (iOS and Android)
+-Target API levels: [Specify a reasonable range based on market research]
+-State management: Redux
+
+###Data Handling:
+
+-User accounts, designs, and order data are the primary data sources.
+-Data stored locally using a suitable database solution (e.g., SQLite, Realm, Async Storage)
+-Option for cloud backup/sync if implemented
+
+###Connectivity:
+
+-Core design features function offline.
+-Shop directory and order placement require internet connectivity.
+
+## Out of Scope [Need Update]
+
+- No Drug interaction checks 
+- No data sharing option 
+- Only support english language 
+- No data compression 
+
+?
