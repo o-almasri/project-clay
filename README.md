@@ -1,10 +1,11 @@
 # Project Clay
+
 A cross-platform clay creation app for designing pottery, streamlining your creative process, and commissioning your designs from preferred shops
 
 ## Team (Group #)
 
 - Tuleen almasri 3200124
-- Omar Almasri 
+- Omar Almasri
 
 ## Features
 
@@ -14,7 +15,6 @@ A cross-platform clay creation app for designing pottery, streamlining your crea
 - Edit profile information (name, contact details, etc.)
 - View design history
 
-
 ### Design Tools
 
 #### Clay Object Design
@@ -23,15 +23,16 @@ A cross-platform clay creation app for designing pottery, streamlining your crea
 - Adjust cylinder width at various points
 
 #### Shirt Design
+
 - Upload an image
 - Add text
 - Select basic shirt style and color
 
 #### Sand Art Design
+
 - Choose a glass container shape
 - Select sand colors
 - Add text or basic design elements
-
 
 #### Pricing & Production
 
@@ -46,7 +47,6 @@ A cross-platform clay creation app for designing pottery, streamlining your crea
 - Filter shops by specialization (clay, shirt, sand art)
 - Submit a design to a selected shop
 - Track order status
-
 
 ## Specs
 
@@ -67,10 +67,17 @@ A cross-platform clay creation app for designing pottery, streamlining your crea
 - Core design features function offline.
 - Shop directory and order placement require internet connectivity.
 
+## How To Run
+
+- Make Sure you Have Node V16+ check yours with node -v command
+- npm install -g expo-cli
+- npx expo install react-native-web react-dom @expo/metro-runtime
+- npm install
+- npm start
+
 ## Out of Scope [Need Update]
 
-- No Drug interaction checks 
-- No data sharing option 
-- Only support english language 
-- No data compression 
-
+- No Drug interaction checks
+- No data sharing option
+- Only support english language
+- No data compression
