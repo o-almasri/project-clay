@@ -74,6 +74,7 @@ A cross-platform clay creation app for designing pottery, streamlining your crea
 - npx expo install react-native-web react-dom @expo/metro-runtime
 - npm install
 - npm start
+- make sure that App.js Path is correct under node_modules/expo/AppEntry.js
 
 ## Out of Scope [Need Update]
 
