@@ -9,7 +9,13 @@ export const colors = {
   pinkish: "rgba(193, 131, 159, 1)", // Orange
   orange: "rgba(255, 90, 95, 1)", // Grey
   teal: "rgba(8, 126, 139, 1)", // Light Grey
-
+  /*
+  white: "rgba(235, 235, 235, 1)", // Blue
+  black: "rgba(60, 60, 60, 1)", // White
+  pinkish: "rgba(193, 131, 159, 1)", // Orange
+  orange: "rgba(255, 90, 95, 1)", // Grey
+  teal: "rgba(8, 126, 139, 1)", // Light Grey
+  */
   // ... add more colors as needed
 };
 const styles = StyleSheet.create({
