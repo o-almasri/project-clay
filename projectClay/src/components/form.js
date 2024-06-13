@@ -8,10 +8,12 @@ import {
   CheckBox,
 } from "react-native";
 import styles from "../styles/styles";
-import { pass } from "three/examples/jsm/nodes/Nodes.js";
+
 
 function Form() {
-
+  const [isSelected ,setSelection] = useState(false);
+  const [name ,setName] = useState("");
+  const [Password ,setPassword] = useState("");
 
   return (
     <View style={styles.cardContainer}>
@@ -30,13 +32,14 @@ function Form() {
             <View style={styles.formTextView}>
               <Text style={styles.formText} >User Name</Text>
             </View>
-            <TextInput style={styles.input}  />
+            <TextInput style={styles.input} value={name} onChangeText={setName} />
 
-{/*Password*/}
+
+            {/*Password*/}
             <View style={styles.formTextView}>
               <Text style={styles.formText}>Password</Text>
             </View>
-            <TextInput style={styles.input} secureTextEntry={true}  />
+            <TextInput style={styles.input} secureTextEntry={true} value={Password} onChangeText={setPassword}  />
 
            
             <View style={styles.checkboxContainer}>
@@ -53,6 +56,9 @@ function Form() {
             <Pressable style={styles.btn}>
               <Text style={styles.buttonText}>Login</Text>
             </Pressable>
+
+
+            <Text style={styles.formText}>{isSelected?"checked":""}{name}{Password}</Text>
           </View>
         </ScrollView>
       </View>
