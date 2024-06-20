@@ -8,16 +8,19 @@ import {
   PresentationControls,
   useFBX,
   MeshDistortMaterial ,
-  MeshStandardMaterial 
+  MeshStandardMaterial,
+  sphereBufferGeometry,
+  InstancedMesh,
+  Sphere
 } from "@react-three/drei";
 import { View } from "react-native";
 import { Canvas ,useFrame} from "@react-three/fiber";
 import styles, { colors } from "../styles/styles";
 import { useRef, forwardRef } from 'react'
-import { useLoader } from '@react-three/fiber'
+import { useLoader ,useThree } from '@react-three/fiber'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import * as THREE from "three";
-
+import { useGesture } from '@use-gesture/react';
 function MyCamera(){
 
 return (<>
@@ -37,8 +40,13 @@ return (<>
         rotation={[0, 0.3, 0]}
         polar={[-Math.PI / 3, Math.PI / 3]}
         azimuth={[-Math.PI / 1.4, Math.PI / 2]}>
-        <Vase/>
+        {/*<CustomVase/>*/}
+        
       </PresentationControls>
+      <CustomVase/>
+      <OrbitControls/>
+      <axesHelper args={[5]} />
+      
      
 </>);
   }
@@ -51,7 +59,7 @@ export default function MyCanvas() {
       <directionalLight position={[5, 10, 5]} intensity={4} castShadow />
       <Shadows/>
      <Ground/>
-      
+     
     </Canvas>
 
    
@@ -65,7 +73,7 @@ function Ground() {
  {/* Ground Plane */}
  <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[10, 10]} />
-        <meshStandardMaterial color={colors.white} />
+        <meshStandardMaterial color={colors.teal} />
         {/* Set the plane's color to match the background */}
       </mesh>
 </>
@@ -95,9 +103,11 @@ function Object(){
   </>);
 }
 const Model = () => {
-  const fbx = useLoader(FBXLoader, './Big_Vase.fbx')
-  return <primitive object={fbx} scale={0.01} />
+  const fbx = useLoader(FBXLoader, './vase.fbx')
+  return <primitive object={fbx} scale={3} />
 };
+
+
 
 const Vase = () => {
   const vaseRef = useRef();
@@ -123,3 +133,102 @@ const Vase = () => {
     </mesh>
   );
 };
+
+function calculateCircleVertices(radius, numPoints,layers,layerheight) {
+  const vertices = [];
+  for (let layer = 0; layer < layers; layer++) {
+  for (let i = 0; i < numPoints; i++) {
+    const angleDegrees = i*(360/numPoints) ;
+    const angleRadians = THREE.MathUtils.degToRad(angleDegrees);
+    const x = radius * Math.cos(angleRadians);
+    const y = 0+layer*layerheight;
+    const z = radius * Math.sin(angleRadians); // Assuming 2D circle in the xy-plane
+    vertices.push(x, y, z); // Push x, y, z coordinates individually
+    
+    
+  }
+}
+
+  return new Float32Array(vertices); // Convert to Float32Array
+}
+
+
+
+
+function CustomVase() {
+  const points = [];
+  const meshRef = useRef();
+  const width =4
+  const radius = 1
+  const layers = 1
+  const layerheight = 0.85;
+  // Create your vertex positions (example: 3D points)
+  const vertices = calculateCircleVertices(radius,width,layers,layerheight)
+
+   pos = new THREE.Vector3(0, 0, 0);
+  for (let i = 0; i < vertices.length; i += 3) { // Increment by 3 for x, y, z groups
+    pos.x = vertices[i];
+    pos.y = vertices[i+1];
+    pos.z = vertices[i+2];
+  }
+
+  // Create a BufferGeometry and add the positions
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // 3 components per vertex (x, y, z)
+
+  // Index BufferAttribute
+const indices = new Uint16Array([
+  0, 1, 2, // First triangle
+  0, 2, 3, // Second triangle
+  // ... (add more indices for additional triangles)
+]);
+geometry.setIndex(new THREE.BufferAttribute(indices, 1)); // 1 index per value
+
+  
+  const vertexArray = Array.from(vertices); 
+
+  return (
+    <>
+  {drawColoredPoint([0,0,0], 0.5,0.5)}
+
+      {/* Render Points */}
+      {vertexArray.map((_, index) => {
+        if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
+          const position = vertexArray.slice(index, index + 3); // Get [x,y,z]
+          
+          return drawColoredPoint(position, index,index);
+          
+        } else {
+          return null; // Don't render anything for y and z components
+        }
+      })}
+    </>
+  );
+}
+
+function drawPoint(position, key) {
+  const randomColor = Math.floor(Math.random() * 16777215).toString(16); // Generate random hex color
+  return (
+    <Sphere key={key} position={new THREE.Vector3(...position)} args={[0.1, 8, 8]}>
+       <meshStandardMaterial color={"#" + randomColor} /> {/* Apply random color */}
+    </Sphere>
+  );
+}
+
+function drawColoredPoint(position, key, hueValue = 120) { // Start with green hue (120 degrees)
+  const colors = ["#5386E4","#4C4B63" , "#690500","#56EEF4","#BB6B00","#11151C","#212D40" , "#83BCA9","#7D4E57","#D66853"]
+  const saturation = 100; // Constant saturation for consistent color type
+  const lightness = 50 ; // Decrease lightness with each call (darker)
+
+  // Ensure lightness stays within valid range (0-100)
+  const validLightness = Math.max(0, Math.min(100, lightness));
+
+  const color = `hsl(${hueValue}, ${saturation}%, ${validLightness}%)`;
+  console.log(`${key/3}`);
+  return (
+    <Sphere key={key} position={new THREE.Vector3(...position)} args={[0.1, 8, 8]}>
+      
+      <meshStandardMaterial color={colors[(key/3)%8]} />
+    </Sphere>
+  );
+}
