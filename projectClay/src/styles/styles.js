@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: -1, // Place canvas behind the overlay
-    pointerEvents: "none",
+    //zIndex: -1, // Place canvas behind the overlay
+
   },
   //Card page wide container
   cardContainer: {
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingRight: windowWidth <= 900 ? "auto" : "10%",
     paddingLeft: windowWidth <= 900 ? "auto" : "auto",
+    pointerEvents: 'box-none',
   },
   card: {
     width: windowWidth <= 900 ? "100%" : "30%",
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     padding: "1%",
     borderRadius: 20,
+    pointerEvents: 'auto',
   },
   ScrollView: { width: "100%", alignItems: "center" },
   input: {
@@ -127,6 +129,10 @@ const styles = StyleSheet.create({
   },
   nomargin: {
     marginTop: 0,
+  },
+  errorText: {
+    color:"red",
+    marginBottom: 10,
   },
 });
 
