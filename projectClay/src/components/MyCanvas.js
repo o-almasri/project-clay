@@ -21,6 +21,14 @@ import { useLoader ,useThree } from '@react-three/fiber'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import * as THREE from "three";
 import { useGesture } from '@use-gesture/react';
+import { DoubleSide } from 'three'
+
+
+
+
+
+
+
 function MyCamera(){
 
 return (<>
@@ -144,15 +152,42 @@ function calculateCircleVertices(radius, numPoints,layers,layerheight) {
     const y = 0+layer*layerheight;
     const z = radius * Math.sin(angleRadians); // Assuming 2D circle in the xy-plane
     vertices.push(x, y, z); // Push x, y, z coordinates individually
-    
-    
   }
 }
 
   return new Float32Array(vertices); // Convert to Float32Array
 }
 
-
+function calculateIndicies(vertices,width) {
+  const loop = vertices.length/3/width;
+  var indices = [];
+  for (let layer = 0; layer < loop; layer++) {
+   // console.log(`layer ${layer} :`)
+    for (let x = 0; x < width; x++) {
+     // console.log(`Point NO = ${(x%width)+width*layer} `)
+      if(layer+1<loop.length){
+        // point above exist you can make a connection
+        let px1 =(x%width)+width*layer;
+        let px2 = (x+1%width)+width*layer;
+        let pl1 = (x%width)+width*layer+1
+        indices.push(px1); 
+        indices.push(px2);
+        indices.push(pl1);
+      }
+      if(layer-1>0){
+        //point below has to exist you can make a connection
+        let px1 =(x%width)+width*layer;
+        let px2 = (x+1%width)+width*layer;
+        let pl0 = (x+1%width)+width*layer+1
+        indices.push(px1); 
+        indices.push(px2);
+        indices.push(pl0);
+      }
+    }
+  }
+ 
+  return new Uint16Array(indices); 
+}
 
 
 function CustomVase() {
@@ -160,11 +195,11 @@ function CustomVase() {
   const meshRef = useRef();
   const width =4
   const radius = 1
-  const layers = 1
+  const layers = 2
   const layerheight = 0.85;
   // Create your vertex positions (example: 3D points)
   const vertices = calculateCircleVertices(radius,width,layers,layerheight)
-
+ 
    pos = new THREE.Vector3(0, 0, 0);
   for (let i = 0; i < vertices.length; i += 3) { // Increment by 3 for x, y, z groups
     pos.x = vertices[i];
@@ -177,33 +212,53 @@ function CustomVase() {
   geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // 3 components per vertex (x, y, z)
 
   // Index BufferAttribute
-const indices = new Uint16Array([
-  0, 1, 2, // First triangle
-  0, 2, 3, // Second triangle
-  // ... (add more indices for additional triangles)
-]);
+const indices =  calculateIndicies(vertices,width);
 geometry.setIndex(new THREE.BufferAttribute(indices, 1)); // 1 index per value
 
-  
   const vertexArray = Array.from(vertices); 
 
-  return (
-    <>
-  {drawColoredPoint([0,0,0], 0.5,0.5)}
+  // return (
+  //   <>
+  // {drawColoredPoint([0,0,0], 0.5,0.5)}
+  //     {/* Render Points */}
+  //     {vertexArray.map((_, index) => {
+  //       if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
+  //         const position = vertexArray.slice(index, index + 3); // Get [x,y,z]
+  //         return drawColoredPoint(position, index,index);
+  //       } else {
+  //         return null; // Don't render anything for y and z components
+  //       }
+  //     })}
+  //   </>
+  // );
+  const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }); // Red wireframe
 
-      {/* Render Points */}
-      {vertexArray.map((_, index) => {
-        if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
-          const position = vertexArray.slice(index, index + 3); // Get [x,y,z]
-          
-          return drawColoredPoint(position, index,index);
-          
-        } else {
-          return null; // Don't render anything for y and z components
-        }
-      })}
-    </>
-  );
+  // Create mesh
+  const mesh = new THREE.Mesh(geometry, material);
+return(
+<mesh>
+        <bufferGeometry>
+            <bufferAttribute
+                attach='attributes-position'
+                array={vertices}
+                count={vertices.length / 3}
+                itemSize={3}
+            />
+
+            <bufferAttribute
+                attach="index"
+                array={indices}
+                count={indices.length}
+                itemSize={1}
+            />
+        </bufferGeometry>
+        <meshStandardMaterial
+            vertexColors
+            side={DoubleSide}
+        />
+    </mesh>
+);
+
 }
 
 function drawPoint(position, key) {
@@ -224,7 +279,7 @@ function drawColoredPoint(position, key, hueValue = 120) { // Start with green h
   const validLightness = Math.max(0, Math.min(100, lightness));
 
   const color = `hsl(${hueValue}, ${saturation}%, ${validLightness}%)`;
-  console.log(`${key/3}`);
+  
   return (
     <Sphere key={key} position={new THREE.Vector3(...position)} args={[0.1, 8, 8]}>
       
