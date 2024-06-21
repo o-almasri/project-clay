@@ -154,39 +154,45 @@ function calculateCircleVertices(radius, numPoints,layers,layerheight) {
     vertices.push(x, y, z); // Push x, y, z coordinates individually
   }
 }
-
+console.log(`vertices ${vertices}`)
   return new Float32Array(vertices); // Convert to Float32Array
 }
 
 function calculateIndicies(vertices,width) {
   const loop = vertices.length/3/width;
   var indices = [];
+  
   for (let layer = 0; layer < loop; layer++) {
    // console.log(`layer ${layer} :`)
     for (let x = 0; x < width; x++) {
      // console.log(`Point NO = ${(x%width)+width*layer} `)
-      if(layer+1<loop.length){
+      if(layer+1<loop){
         // point above exist you can make a connection
-        let px1 =(x%width)+width*layer;
-        let px2 = (x+1%width)+width*layer;
-        let pl1 = (x%width)+width*layer+1
+        var px1 =(x%width)+width*layer;
+        var px2 = ((x+1)%width)+width*layer;
+        var pl1 = (x%width)+width*(layer+1)
+        
         indices.push(px1); 
         indices.push(px2);
         indices.push(pl1);
+        console.log(`Pushing = ${px1}  ${px2}  ${pl1} `)
+        
       }
-      if(layer-1>0){
+      if(layer-1>=0){
         //point below has to exist you can make a connection
-        let px1 =(x%width)+width*layer;
-        let px2 = (x+1%width)+width*layer;
-        let pl0 = (x+1%width)+width*layer+1
+        var px1 =(x%width)+width*layer;
+        var px2 = ((x+1)%width)+width*layer;
+        var pl0 = ((x+1)%width)+width*(layer-1)
         indices.push(px1); 
         indices.push(px2);
         indices.push(pl0);
+
+        console.log(`Pushing low = ${px1}  ${px2}  ${pl0} `)
       }
     }
   }
- 
-  return new Uint16Array(indices); 
+  console.log(`indices ${indices}`)
+  return new Uint32Array(indices); 
 }
 
 
@@ -235,20 +241,59 @@ geometry.setIndex(new THREE.BufferAttribute(indices, 1)); // 1 index per value
 
   // Create mesh
   const mesh = new THREE.Mesh(geometry, material);
-return(
-<mesh>
+
+
+  const positions = new Float32Array([
+    1, 0, 0,
+    0, 1, 0,
+    -1, 0, 0,
+    0, -1, 0
+])
+
+const normals = new Float32Array([
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+])
+
+const colors = new Float32Array([
+    0, 1, 1, 1,
+    1, 0, 1, 1,
+    1, 1, 0, 1,
+    1, 1, 1, 1,
+])
+
+const indices1 = new Uint16Array([
+    0, 1, 3,
+    2, 3, 1,
+])
+
+const Comp = () =>
+    <mesh>
         <bufferGeometry>
             <bufferAttribute
                 attach='attributes-position'
-                array={vertices}
-                count={vertices.length / 3}
+                array={positions}
+                count={positions.length / 3}
                 itemSize={3}
             />
-
+            <bufferAttribute
+                attach='attributes-color'
+                array={colors}
+                count={colors.length / 3}
+                itemSize={3}
+            />
+            <bufferAttribute
+                attach='attributes-normal'
+                array={normals}
+                count={normals.length / 3}
+                itemSize={3}
+            />
             <bufferAttribute
                 attach="index"
-                array={indices}
-                count={indices.length}
+                array={indices1}
+                count={indices1.length}
                 itemSize={1}
             />
         </bufferGeometry>
@@ -257,7 +302,55 @@ return(
             side={DoubleSide}
         />
     </mesh>
-);
+  const indexcolors = new Float32Array(vertices.length); // Match number of vertices
+  colors.fill(1); // Fill with white (1, 1, 1) for each vertex
+
+const Vasss = () =>
+  
+  <mesh>
+      <bufferGeometry>
+          <bufferAttribute
+              attach='attributes-position'
+              array={vertices}
+              count={vertices.length / 3}
+              itemSize={3}
+          />
+      <bufferAttribute // <-- Add this buffer attribute for color
+          attachObject={['attributes', 'color']} // Specify it's a color attribute
+          array={colors}
+          itemSize={3} // 3 values per color (RGB)
+        />
+          <bufferAttribute
+              attach="index"
+              array={indices}
+              count={indices.length}
+              itemSize={1}
+          />
+      </bufferGeometry>
+      <meshStandardMaterial
+          vertexColors
+          side={DoubleSide}
+      />
+  </mesh>
+
+
+  return (
+    <>
+  {drawColoredPoint([0,0,0], 0.5,0.5)}
+  <Vasss/>
+      {/* Render Points */}
+      {vertexArray.map((_, index) => {
+        if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
+          const position = vertexArray.slice(index, index + 3); // Get [x,y,z]
+          return (
+          drawColoredPoint(position, index,index)
+          )
+        } else {
+          return null; // Don't render anything for y and z components
+        }
+      })}
+    </>
+  );
 
 }
 
