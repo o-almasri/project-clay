@@ -158,6 +158,45 @@ console.log(`vertices ${vertices}`)
   return new Float32Array(vertices); // Convert to Float32Array
 }
 
+function calculateNormals(vertices, indices) {
+  const normals = new Float32Array(vertices.length); // Same size as vertices
+
+  for (let i = 0; i < indices.length; i += 3) {
+    const ia = indices[i];
+    const ib = indices[i + 1];
+    const ic = indices[i + 2];
+
+    const vA = new THREE.Vector3(vertices[ia * 3], vertices[ia * 3 + 1], vertices[ia * 3 + 2]);
+    const vB = new THREE.Vector3(vertices[ib * 3], vertices[ib * 3 + 1], vertices[ib * 3 + 2]);
+    const vC = new THREE.Vector3(vertices[ic * 3], vertices[ic * 3 + 1], vertices[ic * 3 + 2]);
+
+    const cb = new THREE.Vector3().subVectors(vC, vB);
+    const ab = new THREE.Vector3().subVectors(vA, vB);
+    const normal = new THREE.Vector3().crossVectors(cb, ab).normalize(); // Calculate face normal
+
+    normals[ia * 3]     += normal.x; 
+    normals[ia * 3 + 1] += normal.y; 
+    normals[ia * 3 + 2] += normal.z;
+    
+    normals[ib * 3]     += normal.x;
+    normals[ib * 3 + 1] += normal.y;
+    normals[ib * 3 + 2] += normal.z;
+    
+    normals[ic * 3]     += normal.x;
+    normals[ic * 3 + 1] += normal.y;
+    normals[ic * 3 + 2] += normal.z;
+  }
+
+  for (let i = 0; i < normals.length; i += 3) {
+    const n = new THREE.Vector3(normals[i], normals[i + 1], normals[i + 2]).normalize();
+    normals[i] = n.x;
+    normals[i + 1] = n.y;
+    normals[i + 2] = n.z;
+  }
+  return normals;
+}
+
+
 function calculateIndicies(vertices,width) {
   const loop = vertices.length/3/width;
   var indices = [];
@@ -199,9 +238,9 @@ function calculateIndicies(vertices,width) {
 function CustomVase() {
   const points = [];
   const meshRef = useRef();
-  const width =4
+  const width =8
   const radius = 1
-  const layers = 2
+  const layers = 8
   const layerheight = 0.85;
   // Create your vertex positions (example: 3D points)
   const vertices = calculateCircleVertices(radius,width,layers,layerheight)
@@ -305,6 +344,8 @@ const Comp = () =>
   const indexcolors = new Float32Array(vertices.length); // Match number of vertices
   colors.fill(1); // Fill with white (1, 1, 1) for each vertex
 
+
+  const objectnormals = calculateNormals(vertices,indices);
 const Vasss = () =>
   
   <mesh>
@@ -315,6 +356,12 @@ const Vasss = () =>
               count={vertices.length / 3}
               itemSize={3}
           />
+            <bufferAttribute
+                attach='attributes-normal'
+                array={objectnormals}
+                count={objectnormals.length / 3}
+                itemSize={3}
+            />
       <bufferAttribute // <-- Add this buffer attribute for color
           attachObject={['attributes', 'color']} // Specify it's a color attribute
           array={colors}
@@ -326,6 +373,8 @@ const Vasss = () =>
               count={indices.length}
               itemSize={1}
           />
+
+          
       </bufferGeometry>
       <meshStandardMaterial
           vertexColors

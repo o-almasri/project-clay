@@ -7,7 +7,7 @@ export default function main() {
   return (
     <View style={styles.container}>
       <MyCanvas />
-      {/*<Form />*/}
+      {/* <Form /> */}
     </View>
   );
 }
