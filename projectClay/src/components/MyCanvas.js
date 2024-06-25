@@ -11,7 +11,9 @@ import {
   MeshStandardMaterial,
   sphereBufferGeometry,
   InstancedMesh,
-  Sphere
+  Sphere,
+  Helper ,
+  VertexNormalsHelper 
 } from "@react-three/drei";
 import { View } from "react-native";
 import { Canvas ,useFrame} from "@react-three/fiber";
@@ -22,8 +24,6 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import * as THREE from "three";
 import { useGesture } from '@use-gesture/react';
 import { DoubleSide } from 'three'
-
-
 
 
 
@@ -51,10 +51,11 @@ return (<>
         {/*<CustomVase/>*/}
         
       </PresentationControls>
-      <CustomVase/>
+      <Object/>
       <OrbitControls/>
-      <axesHelper args={[5]} />
-      
+      {/* <axesHelper args={[5]} /> */}
+
+
      
 </>);
   }
@@ -74,6 +75,10 @@ export default function MyCanvas() {
 
   );
 }
+
+
+
+
 
 function Ground() {
   return(
@@ -98,23 +103,43 @@ function Shadows()  {return(<><ContactShadows
 /></>);
 }
 
+
+
+
 function Object(){
- 
+  var width =16 
+  var radius = 1
 
-  return(<>
-        {/* BOX */}
-        <mesh position={[-1, -0.4, 0]} rotation={[0.1, -0.4, 0]} castShadow>
-        <boxGeometry />
-        <meshStandardMaterial color={colors.orange} />
-      </mesh>
-     
-  </>);
+  var offset = 0;
+  var position = new THREE.Vector3(0,0,0);
+
+  const vertices2 = calculateRingVertices(position,radius,width,offset)
+  const vertexArray2 = Array.from(vertices2); 
+
+return (
+  <>
+  {drawColoredPoint(position, 0.5,0.5)}
+  
+
+  {vertexArray2.map((_, index) => {
+   if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
+     const newposition = vertexArray2.slice(index, index + 3); // Get [x,y,z]
+     return (
+     drawColoredPoint(newposition, index,index)
+     )
+   } else {
+     return null; // Don't render anything for y and z components
+   }
+ })}
+
+
+  </>
+  
+);
+
+
+
 }
-const Model = () => {
-  const fbx = useLoader(FBXLoader, './vase.fbx')
-  return <primitive object={fbx} scale={3} />
-};
-
 
 
 const Vase = () => {
@@ -142,7 +167,7 @@ const Vase = () => {
   );
 };
 
-function calculateCircleVertices(radius, numPoints,layers,layerheight) {
+function calculateCircleVertices(position,radius, numPoints,layers,layerheight) {
   const vertices = [];
   for (let layer = 0; layer < layers; layer++) {
   for (let i = 0; i < numPoints; i++) {
@@ -151,12 +176,28 @@ function calculateCircleVertices(radius, numPoints,layers,layerheight) {
     const x = radius * Math.cos(angleRadians);
     const y = 0+layer*layerheight;
     const z = radius * Math.sin(angleRadians); // Assuming 2D circle in the xy-plane
-    vertices.push(x, y, z); // Push x, y, z coordinates individually
+    vertices.push(x+position.x, y+position.y, z+position.z); // Push x, y, z coordinates individually
   }
 }
 console.log(`vertices ${vertices}`)
   return new Float32Array(vertices); // Convert to Float32Array
 }
+
+function calculateRingVertices(position,radius,numPoints,offset){
+  const vertices = [];
+  for (let i = 0; i < numPoints; i++) {
+    const angleDegrees = i*(360/numPoints) ;
+    const angleRadians = THREE.MathUtils.degToRad(angleDegrees);
+    const x = position.x +radius * Math.cos(angleRadians);
+    const y = position.y;
+    const z = position.z+ radius * Math.sin(angleRadians); // Assuming 2D circle in the xy-plane
+    vertices.push(x, y+offset, z); // Push x, y, z coordinates individually
+  }
+
+  return new Float32Array(vertices); // Convert to Float32Array
+}
+
+
 
 function calculateNormals(vertices, indices) {
   const normals = new Float32Array(vertices.length); // Same size as vertices
@@ -198,6 +239,13 @@ function calculateNormals(vertices, indices) {
 
 
 function calculateIndicies(vertices,width) {
+/*
+Upward-Facing Triangle: indices.push(px1, px2, pl1);
+Downward-Facing Triangle: indices.push(px2, px1, pl0); flips normal
+both have Counter-clockwise winding but with different starting point to ensure proper consistent normals
+*/
+
+
   const loop = vertices.length/3/width;
   var indices = [];
   
@@ -222,8 +270,8 @@ function calculateIndicies(vertices,width) {
         var px1 =(x%width)+width*layer;
         var px2 = ((x+1)%width)+width*layer;
         var pl0 = ((x+1)%width)+width*(layer-1)
-        indices.push(px1); 
         indices.push(px2);
+        indices.push(px1); 
         indices.push(pl0);
 
         console.log(`Pushing low = ${px1}  ${px2}  ${pl0} `)
@@ -238,20 +286,17 @@ function calculateIndicies(vertices,width) {
 function CustomVase() {
   const points = [];
   const meshRef = useRef();
-  const width =8
+  const width =16 
   const radius = 1
-  const layers = 8
-  const layerheight = 0.85;
-  // Create your vertex positions (example: 3D points)
-  const vertices = calculateCircleVertices(radius,width,layers,layerheight)
- 
-   pos = new THREE.Vector3(0, 0, 0);
-  for (let i = 0; i < vertices.length; i += 3) { // Increment by 3 for x, y, z groups
-    pos.x = vertices[i];
-    pos.y = vertices[i+1];
-    pos.z = vertices[i+2];
-  }
+  const layers = 2
+  const layerheight = 0.5;
+  var position = new THREE.Vector3(1,1,0);
 
+
+
+  const vertices = calculateCircleVertices(position,radius,width,layers,layerheight)
+
+ 
   // Create a BufferGeometry and add the positions
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // 3 components per vertex (x, y, z)
@@ -260,94 +305,22 @@ function CustomVase() {
 const indices =  calculateIndicies(vertices,width);
 geometry.setIndex(new THREE.BufferAttribute(indices, 1)); // 1 index per value
 
-  const vertexArray = Array.from(vertices); 
 
-  // return (
-  //   <>
-  // {drawColoredPoint([0,0,0], 0.5,0.5)}
-  //     {/* Render Points */}
-  //     {vertexArray.map((_, index) => {
-  //       if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
-  //         const position = vertexArray.slice(index, index + 3); // Get [x,y,z]
-  //         return drawColoredPoint(position, index,index);
-  //       } else {
-  //         return null; // Don't render anything for y and z components
-  //       }
-  //     })}
-  //   </>
-  // );
+  const vertexArray = Array.from(vertices); 
   const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }); // Red wireframe
 
   // Create mesh
   const mesh = new THREE.Mesh(geometry, material);
 
-
-  const positions = new Float32Array([
-    1, 0, 0,
-    0, 1, 0,
-    -1, 0, 0,
-    0, -1, 0
-])
-
-const normals = new Float32Array([
-    0, 0, 1,
-    0, 0, 1,
-    0, 0, 1,
-    0, 0, 1,
-])
-
-const colors = new Float32Array([
-    0, 1, 1, 1,
-    1, 0, 1, 1,
-    1, 1, 0, 1,
-    1, 1, 1, 1,
-])
-
-const indices1 = new Uint16Array([
-    0, 1, 3,
-    2, 3, 1,
-])
-
-const Comp = () =>
-    <mesh>
-        <bufferGeometry>
-            <bufferAttribute
-                attach='attributes-position'
-                array={positions}
-                count={positions.length / 3}
-                itemSize={3}
-            />
-            <bufferAttribute
-                attach='attributes-color'
-                array={colors}
-                count={colors.length / 3}
-                itemSize={3}
-            />
-            <bufferAttribute
-                attach='attributes-normal'
-                array={normals}
-                count={normals.length / 3}
-                itemSize={3}
-            />
-            <bufferAttribute
-                attach="index"
-                array={indices1}
-                count={indices1.length}
-                itemSize={1}
-            />
-        </bufferGeometry>
-        <meshStandardMaterial
-            vertexColors
-            side={DoubleSide}
-        />
-    </mesh>
+  //create colors
   const indexcolors = new Float32Array(vertices.length); // Match number of vertices
-  colors.fill(1); // Fill with white (1, 1, 1) for each vertex
+  indexcolors.fill(1); // Fill with white (1, 1, 1) for each vertex
 
-
+  //calculate normals
   const objectnormals = calculateNormals(vertices,indices);
+
+
 const Vasss = () =>
-  
   <mesh>
       <bufferGeometry>
           <bufferAttribute
@@ -364,7 +337,7 @@ const Vasss = () =>
             />
       <bufferAttribute // <-- Add this buffer attribute for color
           attachObject={['attributes', 'color']} // Specify it's a color attribute
-          array={colors}
+          array={indexcolors}
           itemSize={3} // 3 values per color (RGB)
         />
           <bufferAttribute
@@ -377,16 +350,21 @@ const Vasss = () =>
           
       </bufferGeometry>
       <meshStandardMaterial
-          vertexColors
+          indexcolors
           side={DoubleSide}
       />
+      
   </mesh>
+  
 
 
   return (
+    
     <>
+     <Vasss/>
   {drawColoredPoint([0,0,0], 0.5,0.5)}
   <Vasss/>
+   
       {/* Render Points */}
       {vertexArray.map((_, index) => {
         if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
@@ -400,7 +378,7 @@ const Vasss = () =>
       })}
     </>
   );
-
+  
 }
 
 function drawPoint(position, key) {
@@ -424,8 +402,7 @@ function drawColoredPoint(position, key, hueValue = 120) { // Start with green h
   
   return (
     <Sphere key={key} position={new THREE.Vector3(...position)} args={[0.1, 8, 8]}>
-      
-      <meshStandardMaterial color={colors[(key/3)%8]} />
+      <meshStandardMaterial color={colors[(key/3)%colors.length]} />
     </Sphere>
   );
 }
