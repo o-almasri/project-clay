@@ -51,14 +51,15 @@ function MyCamera() {
       polar={[-Math.PI / 3, Math.PI / 3]}
       azimuth={[-Math.PI / 1.4, Math.PI / 2]}>
       {/*<CustomVase/>*/}
-
+      <Thingy />
     </PresentationControls>
 
     <OrbitControls />
     {/* <axesHelper args={[5]} /> */}
+    {/* <Vas2e /> */}
+    {/* <Object /> */}
 
-
-    <Thingy />
+    {/* <Model /> */}
 
   </>);
 }
@@ -82,15 +83,24 @@ export default function MyCanvas() {
 
 function Thingy() {
 
-  let vase = new Vase([0, 0, 0], 100, []);
+  let vase = new Vase([0, 0, 0], 4, []);
 
-  // vase.addSlice([0, 0, 0], 0.5, 1);
-  // vase.addSlice([0, 0, 0], 1, 1);
-  // vase.addSlice([0, 0, 0], 0.25, 1);
-  // vase.addSlice([0, 0, 0], 0.5, 1);
 
-  vase.addSlice([0, 0, 0], 1, 5);
-  vase.addSlice([0, 0, 0], 1, 1);
+  //vase shape
+  // vase.addSlice([0, 0, 0], 0.5, 0);
+  // vase.addSlice([0, 0, 0], 0.8, 1);
+  // vase.addSlice([0, 0, 0], 1, 1.5);
+  // vase.addSlice([0, 0, 0], 0.8, 1.75);
+  // vase.addSlice([0, 0, 0], 0.25, 2);
+  // vase.addSlice([0, 0, 0], 0.5, 2.25);
+
+
+  //plate positin radius height
+  vase.addSlice([0, 0, 0], 0., 0);
+  vase.addSlice([0, 0, 0], 0.7, 0.1);
+  vase.addSlice([0, 0, 0], 1, 0.2);
+  vase.addSlice([0, 0, 0], 0.99, 0.21);
+
 
   return (
     vase.getMesh()
@@ -148,6 +158,7 @@ function Object() {
   const vertices2 = calculateRingVertices(position, radius, width, offset)
   const vertexArray2 = Array.from(vertices2);
 
+
   return (
     <>
       {drawColoredPoint(position, 0.5, 0.5)}
@@ -156,6 +167,57 @@ function Object() {
       {vertexArray2.map((_, index) => {
         if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
           const newposition = vertexArray2.slice(index, index + 3); // Get [x,y,z]
+          return (
+            drawColoredPoint(newposition, index, index)
+          )
+        } else {
+          return null; // Don't render anything for y and z components
+        }
+      })}
+
+
+    </>
+
+  );
+
+
+
+}
+
+
+
+function Object2() {
+
+  /* 
+  
+  a single ring will contain 
+  position : starting position 
+  width : how many points per ring
+  raduis: how far each point from the center 
+  
+  
+  */
+
+
+  var width = 16
+  var radius = 1
+  var layer = 2
+  var layerheight = 1
+  var offset = 0;
+  var position = new THREE.Vector3(0, 0, 0);
+
+  const vertices = calculateCircleVertices(position, radius, width, offset, layer, layerheight)
+  const vertexArray = Array.from(vertices);
+
+
+  return (
+    <>
+      {drawColoredPoint(position, 0.5, 0.5)}
+
+
+      {vertexArray.map((_, index) => {
+        if (index % 3 === 0) { // Only draw a point every 3rd element (x, y, z)
+          const newposition = vertexArray.slice(index, index + 3); // Get [x,y,z]
           return (
             drawColoredPoint(newposition, index, index)
           )
@@ -313,6 +375,12 @@ function calculateIndicies(vertices, width) {
   console.log(`indices ${indices}`)
   return new Uint32Array(indices);
 }
+
+
+const Model = () => {
+  const fbx = useLoader(FBXLoader, './Big_Vase.fbx')
+  return <primitive object={fbx} scale={0.01} />
+};
 
 
 function CustomVase() {

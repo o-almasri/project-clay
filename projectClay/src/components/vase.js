@@ -15,7 +15,7 @@ class Vase {
 
     addSlice(position, radius, height) {
 
-        position[1] += 0.25 * this.slices.length + height;
+        position[1] += height;
         let slice = new Slice(position, this.width, radius, false);
 
 
