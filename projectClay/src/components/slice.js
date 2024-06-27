@@ -7,8 +7,7 @@ class Slice {
     Closed : boolean for logic of closed or not 
     vertices : flaot32 array
     
-    top flag as stop above it ? 
-    bottom flag as connect dots to make base ? 
+ 
     
     */
 

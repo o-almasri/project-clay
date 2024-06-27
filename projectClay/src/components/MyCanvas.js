@@ -83,7 +83,7 @@ export default function MyCanvas() {
 
 function Thingy() {
 
-  let vase = new Vase([0, 0, 0], 4, []);
+  let vase = new Vase([0, 0, 0], 50, []);
 
 
   //vase shape
