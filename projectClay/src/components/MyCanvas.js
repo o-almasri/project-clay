@@ -51,16 +51,18 @@ function MyCamera() {
       polar={[-Math.PI / 3, Math.PI / 3]}
       azimuth={[-Math.PI / 1.4, Math.PI / 2]}>
       {/*<CustomVase/>*/}
-      <Thingy />
+      {/* <Thingy /> */}
     </PresentationControls>
 
     <OrbitControls />
+    {/* <BoxObj /> */}
     {/* <axesHelper args={[5]} /> */}
+    {/* <Model /> */}
     {/* <Vas2e /> */}
     {/* <Object /> */}
-
-    {/* <Model /> */}
-
+    {/*adjust layer count for demo*/}
+    {/* <Object2 /> */}
+    <Thingy />
   </>);
 }
 
@@ -80,26 +82,57 @@ export default function MyCanvas() {
   );
 }
 
+function BoxObj() {
 
+
+  return (<>
+    {/* BOX */}
+    <mesh position={[-1, -0.4, 0]} rotation={[0.1, -0.4, 0]} castShadow>
+      <boxGeometry />
+      <meshStandardMaterial color={colors.orange} />
+    </mesh>
+
+  </>);
+}
 function Thingy() {
 
   let vase = new Vase([0, 0, 0], 50, []);
 
 
   //vase shape
+
+
+  // position , radius , height 
+  // vase.addSlice([0, 0, 0], 0, 0);
   // vase.addSlice([0, 0, 0], 0.5, 0);
+  // vase.addSlice([0, 0, 0], 0.7, 0.5);
+  // vase.addSlice([0, 0, 0], 0.7, 1);
+  // vase.addSlice([0, 0, 0], 0.3, 1.2);
+  // vase.addSlice([0, 0, 0], 0.3, 2);
+  // vase.addSlice([0, 0, 0], 0.001, 2.5);
+
+
+  //vase
+  // vase.addSlice([0, 0, 0], 0, 1);
   // vase.addSlice([0, 0, 0], 0.8, 1);
   // vase.addSlice([0, 0, 0], 1, 1.5);
   // vase.addSlice([0, 0, 0], 0.8, 1.75);
   // vase.addSlice([0, 0, 0], 0.25, 2);
   // vase.addSlice([0, 0, 0], 0.5, 2.25);
 
+  // vase.addSlice([0, 0, 0], 0, 1);
+  // vase.addSlice([0, 0, 0], 0.5, 1);
+  // vase.addSlice([0, 0, 0], 1, 2.5);
+  // vase.addSlice([0, 0, 0], 0.8, 2.75);
+  // vase.addSlice([0, 0, 0], 0.25, 3);
+  // vase.addSlice([0, 0, 0], 0.5, 3.25);
+
 
   //plate positin radius height
-  vase.addSlice([0, 0, 0], 0., 0);
-  vase.addSlice([0, 0, 0], 0.7, 0.1);
-  vase.addSlice([0, 0, 0], 1, 0.2);
-  vase.addSlice([0, 0, 0], 0.99, 0.21);
+  // vase.addSlice([0, 0, 0], 0., 0.09);
+  // vase.addSlice([0, 0, 0], 0.7, 0.1);
+  // vase.addSlice([0, 0, 0], 1, 0.2);
+  // vase.addSlice([0, 0, 0], 0.99, 0.21);
 
 
   return (
@@ -199,14 +232,14 @@ function Object2() {
   */
 
 
-  var width = 16
+  var width = 10
   var radius = 1
-  var layer = 2
+  var layer = 4
   var layerheight = 1
   var offset = 0;
   var position = new THREE.Vector3(0, 0, 0);
 
-  const vertices = calculateCircleVertices(position, radius, width, offset, layer, layerheight)
+  const vertices = calculateCircleVertices(position, radius, width, layer, layerheight)
   const vertexArray = Array.from(vertices);
 
 
