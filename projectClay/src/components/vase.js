@@ -15,7 +15,12 @@ class Vase {
 
     addSlice(position, radius, height) {
 
-        position[1] += height;
+        let start = 0;
+        if (this.slices.length > 0)
+            start = this.slices[this.slices.length - 1].getVertices()[1];
+
+
+        position[1] += height + start;
         let slice = new Slice(position, this.width, radius, false);
 
 

@@ -129,10 +129,10 @@ function Thingy() {
 
 
   //plate positin radius height
-  // vase.addSlice([0, 0, 0], 0., 0.09);
-  // vase.addSlice([0, 0, 0], 0.7, 0.1);
-  // vase.addSlice([0, 0, 0], 1, 0.2);
-  // vase.addSlice([0, 0, 0], 0.99, 0.21);
+  vase.addSlice([0, 0, 0], 0., 0);
+  vase.addSlice([0, 0, 0], 0.7, 0.01);
+  vase.addSlice([0, 0, 0], 1, 0.05);
+  vase.addSlice([0, 0, 0], 0.99, 0.01);
 
 
   return (
