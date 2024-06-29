@@ -97,30 +97,51 @@ function BoxObj() {
 function Thingy() {
 
   //41703 max number of valeus 
-  let vase = new Vase([0, 0, 0], 10, []);
+  let vase = new Vase([0, 0, 0], 32, []);
 
   // vase.addSlice([0, 0, 0], 1, 0);
 
   //vase shape
-  vase.addSlice([0, 0, 0], 0.5, 0);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
-  vase.addSlice([0, 0, 0], 0.5, 0.1);
+
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+
+  vase.addSlice([0, 0, 0], 1, .1);
+  vase.addSlice([0, 0, 0], 1, .1);
+
 
 
 

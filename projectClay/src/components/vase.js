@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { DoubleSide } from 'three'
 import { useLoader } from '@react-three/fiber'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
-import { useTexture, Sphere } from "@react-three/drei";
+import { useTexture, Sphere, Cylinder } from "@react-three/drei";
 
 class Vase {
 
@@ -96,6 +96,8 @@ class Vase {
         return new Uint32Array(indices);
     }
 
+
+
     // normals for lighting and other 
     calculateNormals(vertices, indices) {
         const normals = new Float32Array(vertices.length); // Same size as vertices
@@ -136,6 +138,7 @@ class Vase {
     }
     //TODO::add calculate UV
 
+
     calculateUVs() {
         // do some error handling 
         if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
@@ -157,6 +160,23 @@ class Vase {
 
         return new Float32Array(this.UVs); // Return the calculated UVs
     } // CalculateUVs
+    calculateUVs2(vertices, width) {
+        const height = vertices.length / 3 / width;
+        const uvs = [];
+
+        for (let layer = 0; layer < height; layer++) {
+            for (let x = 0; x < width; x++) {
+                const u = x / (width - 1);
+                const v = layer / (height - 1);
+                uvs.push(u, v);
+            }
+        }
+
+        return new Float32Array(uvs);
+    }
+
+
+
 
 
     //get obj where it returns R3F mesh
@@ -166,45 +186,97 @@ class Vase {
         let vertices = this.calculateVerticesFromSlices();
 
 
-        const geometry = new THREE.BufferGeometry();
+        let geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // 3 components per vertex (x, y, z)
 
 
         //console.log(`Vertix ${ vertices }`)
 
         // Index BufferAttribute
-        const indices = this.calculateIndicies(vertices, this.width);
+        let indices = this.calculateIndicies(vertices, this.width);
         geometry.setIndex(new THREE.BufferAttribute(indices, 1)); // 1 index per value
-
 
         // console.log(`indecies ${ indices }`)
         //create colors
-        const indexcolors = new Float32Array(vertices.length); // Match number of vertices
+        let indexcolors = new Float32Array(vertices.length); // Match number of vertices
         indexcolors.fill(0.5); // Fill with white (1, 1, 1) for each vertex
 
 
         //calculate normals
-        const objectnormals = this.calculateNormals(vertices, indices);
+        let objectnormals = this.calculateNormals(vertices, indices);
+
         //const colorMap = useLoader(TextureLoader, './Textures/Clay002_1K-JPG_Color.jpg')
         const objtexture = useTexture(
             {
                 map: 'Textures/Clay002_1K-JPG_Color.jpg',
                 //displacement map cause alot of weird issues 
-                //  displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
+                displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
                 aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
                 roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });
         //calculate UVs
         this.calculateUVs();
+        //this.UVs = this.calculateUVs2(vertices, this.width);
+
+        exportMeshData(vertices, indices, objectnormals, this.UVs)
+
+        async function exportMeshData(verticess, indicess, objectnormalss, UVss) {
+            let vertices = verticess;
+            let indices = indicess;
+            let objectnormals = objectnormalss;
+            let UVs = UVss;
+
+            let plyData = `ply
+          format ascii 1.0
+          element vertex ${vertices.length / 3}
+          property float x
+          property float y
+          property float z
+          property float nx
+          property float ny
+          property float nz
+          property float s
+          property float t
+          element face ${indices.length / 3}
+          property list uchar int vertex_indices
+          end_header
+          `;
+
+            for (let i = 0; i < vertices.length; i += 3) {
+                plyData += `${vertices[i]} ${vertices[i + 1]} ${vertices[i + 2]} `; // Vertex coordinates
+                plyData += `${objectnormals[i]} ${objectnormals[i + 1]} ${objectnormals[i + 2]} `; // Normals
+                plyData += `${UVs[i / 3 * 2]} ${UVs[i / 3 * 2 + 1]}\n`; // UVs
+            }
+
+            for (let i = 0; i < indices.length; i += 3) {
+                plyData += `3 ${indices[i]} ${indices[i + 1]} ${indices[i + 2]}\n`; // Triangle faces
+            }
+
+            const blob = new Blob([plyData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'mesh_data.ply'; // Use .ply extension
+            link.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+
 
         return (
             <>
-                <Sphere position={[0, 0, 0]} args={[1, 10, 10]} >
+                <Cylinder position={[0, 0, 0]}  >
                     <meshStandardMaterial {...objtexture}
                     />
-                </Sphere>
-                <mesh>
+                </Cylinder >
+                {/* <Sphere position={[0, 0, 0]} args={[1, 10, 10]} >
+                    <meshStandardMaterial {...objtexture}
+                    />
+                </Sphere> */}
+                < mesh >
                     <bufferGeometry>
                         <bufferAttribute
                             attach='attributes-position'
@@ -216,10 +288,9 @@ class Vase {
                         <bufferAttribute
                             attachObject={['attributes', 'uv']} // Attach to the 'uv' attribute
                             array={this.UVs}
-                            count={this.UVs / 2} // Two values per UV pair
+                            count={this.UVs.length / 2} // Two values per UV pair
                             itemSize={2} // 2 components (u, v) per item
                         />
-
                         <bufferAttribute
                             attach="index"
                             array={indices}
@@ -236,11 +307,21 @@ class Vase {
 
 
                     </bufferGeometry>
-                    <meshStandardMaterial {...objtexture}
-                        side={DoubleSide} />
+                    <meshStandardMaterial
+                        attach="material"
+                        map={objtexture.map}
+                        normalMap={objtexture.normalMap}
+                        roughnessMap={objtexture.roughnessMap}
+                        aoMap={objtexture.aoMap}
+                        color={0xffffff}
+                        roughness={0.5}
+                        metalness={0.5}
+                    // side={DoubleSide}
+
+                    />
 
 
-                </mesh>
+                </mesh >
             </>
         );
     }
