@@ -1,6 +1,10 @@
 import Slice from "./slice";
 import * as THREE from "three";
 import { DoubleSide } from 'three'
+import { useLoader } from '@react-three/fiber'
+import { TextureLoader } from 'three/src/loaders/TextureLoader'
+import { useTexture, Sphere } from "@react-three/drei";
+
 class Vase {
 
 
@@ -9,6 +13,7 @@ class Vase {
         this.slices = slices;
         this.vertices = []; // Initialize vertices array here
         this.width = width;
+        this.UVs = []
     }
 
     //TODO::add a function to adjust slice radius and position and recalculate vertices
@@ -70,11 +75,9 @@ class Vase {
                     var px1 = (x % width) + width * layer;
                     var px2 = ((x + 1) % width) + width * layer;
                     var pl1 = (x % width) + width * (layer + 1)
-
                     indices.push(px1);
                     indices.push(px2);
                     indices.push(pl1);
-
                 }
                 if (layer - 1 >= 0) {
                     //point below has to exist you can make a connection
@@ -132,6 +135,30 @@ class Vase {
         return normals;
     }
     //TODO::add calculate UV
+
+    calculateUVs() {
+        // do some error handling 
+        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
+            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
+        }
+        this.UVs = [];
+        const verticesPerLayer = this.vertices.length / 3; // Total vertices per layer
+        const numLayers = verticesPerLayer / this.width;
+
+        for (let y = 0; y < numLayers; y++) {
+            for (let x = 0; x < this.width; x++) {
+                const u = x / (this.width - 1);   // Normalize U to [0, 1]
+                const v = y / (numLayers - 1); // Normalize V to [0, 1]
+
+                this.UVs.push(u);
+                this.UVs.push(v);
+            }
+        }
+
+        return new Float32Array(this.UVs); // Return the calculated UVs
+    } // CalculateUVs
+
+
     //get obj where it returns R3F mesh
 
     getMesh() {
@@ -143,14 +170,14 @@ class Vase {
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // 3 components per vertex (x, y, z)
 
 
-        //console.log(`Vertix ${vertices}`)
+        //console.log(`Vertix ${ vertices }`)
 
         // Index BufferAttribute
         const indices = this.calculateIndicies(vertices, this.width);
         geometry.setIndex(new THREE.BufferAttribute(indices, 1)); // 1 index per value
 
 
-        // console.log(`indecies ${indices}`)
+        // console.log(`indecies ${ indices }`)
         //create colors
         const indexcolors = new Float32Array(vertices.length); // Match number of vertices
         indexcolors.fill(0.5); // Fill with white (1, 1, 1) for each vertex
@@ -158,42 +185,63 @@ class Vase {
 
         //calculate normals
         const objectnormals = this.calculateNormals(vertices, indices);
-
+        //const colorMap = useLoader(TextureLoader, './Textures/Clay002_1K-JPG_Color.jpg')
+        const objtexture = useTexture(
+            {
+                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                //displacement map cause alot of weird issues 
+                //  displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
+                normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
+                aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
+                roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
+            });
+        //calculate UVs
+        this.calculateUVs();
 
         return (
-            <mesh>
-                <bufferGeometry>
-                    <bufferAttribute
-                        attach='attributes-position'
-                        array={vertices}
-                        count={vertices.length / 3}
-                        itemSize={3}
+            <>
+                <Sphere position={[0, 0, 0]} args={[1, 10, 10]} >
+                    <meshStandardMaterial {...objtexture}
+                    />
+                </Sphere>
+                <mesh>
+                    <bufferGeometry>
+                        <bufferAttribute
+                            attach='attributes-position'
+                            array={vertices}
+                            count={vertices.length / 3}
+                            itemSize={3}
+                        />
+                        {/* Attach the UV buffer attribute */}
+                        <bufferAttribute
+                            attachObject={['attributes', 'uv']} // Attach to the 'uv' attribute
+                            array={this.UVs}
+                            count={this.UVs / 2} // Two values per UV pair
+                            itemSize={2} // 2 components (u, v) per item
+                        />
 
-                    />
-                    <bufferAttribute
-                        attach='attributes-normal'
-                        array={objectnormals}
-                        count={objectnormals.length / 3}
-                        itemSize={3}
-                    />
-                    <bufferAttribute // <-- Add this buffer attribute for color
-                        attachObject={['attributes', 'color']} // Specify it's a color attribute
-                        array={indexcolors}
-                        itemSize={3} // 3 values per color (RGB)
-                    />
-                    <bufferAttribute
-                        attach="index"
-                        array={indices}
-                        count={indices.length}
-                        itemSize={1}
-                    />
-                </bufferGeometry>
-                <meshStandardMaterial
-                    indexcolors
-                    side={DoubleSide}
-                />
+                        <bufferAttribute
+                            attach="index"
+                            array={indices}
+                            count={indices.length}
+                            itemSize={1}
+                        />
+                        <bufferAttribute
+                            attach='attributes-normal'
+                            array={objectnormals}
+                            count={objectnormals.length / 3}
+                            itemSize={3}
+                        />
 
-            </mesh>
+
+
+                    </bufferGeometry>
+                    <meshStandardMaterial {...objtexture}
+                        side={DoubleSide} />
+
+
+                </mesh>
+            </>
         );
     }
 

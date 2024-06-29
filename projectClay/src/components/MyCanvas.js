@@ -96,20 +96,42 @@ function BoxObj() {
 }
 function Thingy() {
 
-  let vase = new Vase([0, 0, 0], 50, []);
+  //41703 max number of valeus 
+  let vase = new Vase([0, 0, 0], 10, []);
 
+  // vase.addSlice([0, 0, 0], 1, 0);
 
   //vase shape
+  vase.addSlice([0, 0, 0], 0.5, 0);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+  vase.addSlice([0, 0, 0], 0.5, 0.1);
+
 
 
   // position , radius , height 
   // vase.addSlice([0, 0, 0], 0, 0);
-  // vase.addSlice([0, 0, 0], 0.5, 0);
+  // vase.addSlice([0, 0, 0], 0.5, 0.0);
   // vase.addSlice([0, 0, 0], 0.7, 0.5);
-  // vase.addSlice([0, 0, 0], 0.7, 1);
-  // vase.addSlice([0, 0, 0], 0.3, 1.2);
-  // vase.addSlice([0, 0, 0], 0.3, 2);
-  // vase.addSlice([0, 0, 0], 0.001, 2.5);
+  // vase.addSlice([0, 0, 0], 0.7, 0.3);
+  // vase.addSlice([0, 0, 0], 0.3, 0.2);
+  // vase.addSlice([0, 0, 0], 0.3, 0.8);
+  // vase.addSlice([0, 0, 0], 0.001, 0.7);
 
 
   //vase
@@ -129,10 +151,10 @@ function Thingy() {
 
 
   //plate positin radius height
-  vase.addSlice([0, 0, 0], 0., 0);
-  vase.addSlice([0, 0, 0], 0.7, 0.01);
-  vase.addSlice([0, 0, 0], 1, 0.05);
-  vase.addSlice([0, 0, 0], 0.99, 0.01);
+  // vase.addSlice([0, 0, 0], 0., 0);
+  // vase.addSlice([0, 0, 0], 0.7, 0.01);
+  // vase.addSlice([0, 0, 0], 1, 0.05);
+  // vase.addSlice([0, 0, 0], 0.99, 0.01);
 
 
   return (
