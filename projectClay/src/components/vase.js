@@ -75,18 +75,18 @@ class Vase {
                     var px1 = (x % width) + width * layer;
                     var px2 = ((x + 1) % width) + width * layer;
                     var pl1 = (x % width) + width * (layer + 1)
-                    indices.push(px1);
-                    indices.push(px2);
                     indices.push(pl1);
+                    indices.push(px2);
+                    indices.push(px1);
                 }
                 if (layer - 1 >= 0) {
                     //point below has to exist you can make a connection
                     var px1 = (x % width) + width * layer;
                     var px2 = ((x + 1) % width) + width * layer;
                     var pl0 = ((x + 1) % width) + width * (layer - 1)
-                    indices.push(px2);
-                    indices.push(px1);
                     indices.push(pl0);
+                    indices.push(px1);
+                    indices.push(px2);
 
 
                 }
@@ -160,22 +160,30 @@ class Vase {
 
         return new Float32Array(this.UVs); // Return the calculated UVs
     } // CalculateUVs
-    calculateUVs2(vertices, width) {
-        const height = vertices.length / 3 / width;
-        const uvs = [];
 
-        for (let layer = 0; layer < height; layer++) {
-            for (let x = 0; x < width; x++) {
-                const u = x / (width - 1);
-                const v = layer / (height - 1);
-                uvs.push(u, v);
+    calculateUVs2() {
+        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
+            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
+        }
+
+        this.UVs = [];
+        const verticesPerLayer = this.vertices.length / 3;
+        const numLayers = verticesPerLayer / this.width;
+
+        for (let y = 0; y < numLayers; y++) {
+            for (let x = 0; x < this.width; x++) {
+                const u = x / (this.width - 1);
+                const v = y / (numLayers - 1);
+
+                // Duplicate UVs for each of the three vertices in a triangle
+                this.UVs.push(u, v); // Top-left vertex of triangle
+                this.UVs.push(u + 1 / (this.width - 1), v); // Top-right vertex of triangle
+                this.UVs.push(u, v + 1 / (numLayers - 1)); // Bottom-left vertex of triangle
             }
         }
 
-        return new Float32Array(uvs);
+        return new Float32Array(this.UVs);
     }
-
-
 
 
 
@@ -205,6 +213,10 @@ class Vase {
         //calculate normals
         let objectnormals = this.calculateNormals(vertices, indices);
 
+        this.calculateUVs2();
+        geometry.setAttribute('uv', this.UVs);
+
+
         //const colorMap = useLoader(TextureLoader, './Textures/Clay002_1K-JPG_Color.jpg')
         const objtexture = useTexture(
             {
@@ -216,7 +228,7 @@ class Vase {
                 roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });
         //calculate UVs
-        this.calculateUVs();
+
         //this.UVs = this.calculateUVs2(vertices, this.width);
 
         exportMeshData(vertices, indices, objectnormals, this.UVs)
