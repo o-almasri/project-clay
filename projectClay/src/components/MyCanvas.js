@@ -97,50 +97,25 @@ function BoxObj() {
 function Thingy() {
 
   //41703 max number of valeus 
-  let vase = new Vase([0, 0, 0], 32, []);
+  let vase = new Vase([0, 0, 0], 30, []);
 
   // vase.addSlice([0, 0, 0], 1, 0);
 
   //vase shape
-
+  // vase.addSlice([0, 0, 0], 0, .1);
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
-
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
   vase.addSlice([0, 0, 0], 1, .1);
 
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
 
 
 
@@ -179,7 +154,9 @@ function Thingy() {
 
 
   return (
-    vase.getMesh()
+    // vase.getMesh()
+    //vase.getRekt()
+    vase.getMesh2()
   )
 
 }

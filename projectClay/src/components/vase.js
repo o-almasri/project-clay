@@ -4,6 +4,9 @@ import { DoubleSide } from 'three'
 import { useLoader } from '@react-three/fiber'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
 import { useTexture, Sphere, Cylinder } from "@react-three/drei";
+import { PLYExporter } from 'three/examples/jsm/exporters/PLYExporter';
+import React, { useRef, useEffect } from 'react';
+import { BufferGeometry, BufferAttribute, MeshBasicMaterial, Mesh } from 'three';
 
 class Vase {
 
@@ -14,7 +17,22 @@ class Vase {
         this.vertices = []; // Initialize vertices array here
         this.width = width;
         this.UVs = []
+        this.meshRef = React.createRef();
+        this.state = {
+            currentTexture: null
+        };
     }
+
+
+    componentDidMount() {
+        // Set the initial texture after the component mounts
+        this.setState({ currentTexture: this.texture });
+    }
+
+    updateTexture(newTexture) {
+        this.setState({ currentTexture: newTexture });
+    }
+
 
     //TODO::add a function to adjust slice radius and position and recalculate vertices
 
@@ -25,6 +43,7 @@ class Vase {
             start = this.slices[this.slices.length - 1].getVertices()[1];
 
 
+        // add height on top of previous slice
         position[1] += height + start;
         let slice = new Slice(position, this.width, radius, false);
 
@@ -151,7 +170,7 @@ class Vase {
         for (let y = 0; y < numLayers; y++) {
             for (let x = 0; x < this.width; x++) {
                 const u = x / (this.width - 1);   // Normalize U to [0, 1]
-                const v = y / (numLayers - 1); // Normalize V to [0, 1]
+                const v = 1 - (y / (numLayers - 1)); // Normalize V to [0, 1]
 
                 this.UVs.push(u);
                 this.UVs.push(v);
@@ -161,30 +180,20 @@ class Vase {
         return new Float32Array(this.UVs); // Return the calculated UVs
     } // CalculateUVs
 
-    calculateUVs2() {
-        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
-            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
-        }
+    calculateUVs2(fixedValue = 0.5) {
+        // ... (input validation remains the same)
 
         this.UVs = [];
-        const verticesPerLayer = this.vertices.length / 3;
-        const numLayers = verticesPerLayer / this.width;
 
-        for (let y = 0; y < numLayers; y++) {
-            for (let x = 0; x < this.width; x++) {
-                const u = x / (this.width - 1);
-                const v = y / (numLayers - 1);
+        // Calculate the total number of UV coordinates needed (one per vertex)
+        const numUVs = this.vertices.length; // This will change to have one per wedge
 
-                // Duplicate UVs for each of the three vertices in a triangle
-                this.UVs.push(u, v); // Top-left vertex of triangle
-                this.UVs.push(u + 1 / (this.width - 1), v); // Top-right vertex of triangle
-                this.UVs.push(u, v + 1 / (numLayers - 1)); // Bottom-left vertex of triangle
-            }
+        for (let i = 0; i < numUVs; i++) {
+            this.UVs.push(fixedValue, fixedValue);
         }
 
         return new Float32Array(this.UVs);
     }
-
 
 
     //get obj where it returns R3F mesh
@@ -213,14 +222,15 @@ class Vase {
         //calculate normals
         let objectnormals = this.calculateNormals(vertices, indices);
 
-        this.calculateUVs2();
+        this.calculateUVs();
         geometry.setAttribute('uv', this.UVs);
 
 
         //const colorMap = useLoader(TextureLoader, './Textures/Clay002_1K-JPG_Color.jpg')
         const objtexture = useTexture(
             {
-                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                // map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                map: 'Textures/check.jpg',
                 //displacement map cause alot of weird issues 
                 displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
@@ -232,6 +242,9 @@ class Vase {
         //this.UVs = this.calculateUVs2(vertices, this.width);
 
         exportMeshData(vertices, indices, objectnormals, this.UVs)
+        console.log(`UVS ${this.UVs}`)
+
+
 
         async function exportMeshData(verticess, indicess, objectnormalss, UVss) {
             let vertices = verticess;
@@ -277,10 +290,11 @@ class Vase {
         }
 
 
-
+        /*geometry.setAttribute('uv', new BufferAttribute(wedgeUVs, 2));
+          geometry.attributes.uv.needsUpdate = true; */
         return (
             <>
-                <Cylinder position={[0, 0, 0]}  >
+                <Cylinder position={[2, 0, 0]}  >
                     <meshStandardMaterial {...objtexture}
                     />
                 </Cylinder >
@@ -288,7 +302,7 @@ class Vase {
                     <meshStandardMaterial {...objtexture}
                     />
                 </Sphere> */}
-                < mesh >
+                < mesh ref={this.meshRef}>
                     <bufferGeometry>
                         <bufferAttribute
                             attach='attributes-position'
@@ -303,6 +317,7 @@ class Vase {
                             count={this.UVs.length / 2} // Two values per UV pair
                             itemSize={2} // 2 components (u, v) per item
                         />
+
                         <bufferAttribute
                             attach="index"
                             array={indices}
@@ -328,8 +343,9 @@ class Vase {
                         color={0xffffff}
                         roughness={0.5}
                         metalness={0.5}
-                    // side={DoubleSide}
-
+                        side={DoubleSide}
+                        wireframe={true}          // Enable wireframe mode
+                        wireframeLinewidth={2}
                     />
 
 
@@ -338,9 +354,93 @@ class Vase {
         );
     }
 
+    getMesh2() {
+        const vertices = this.calculateVerticesFromSlices();
+        const indices = this.calculateIndicies(vertices, this.width);
+        const objectnormals = this.calculateNormals(vertices, indices);
+        this.calculateUVs();
+
+        const geometry = new BufferGeometry();
+        const verticesArray = new Float32Array(vertices);
+        geometry.setAttribute('position', new BufferAttribute(verticesArray, 3));
+
+        const indicesArray = new Uint16Array(indices);
+        geometry.setIndex(new BufferAttribute(indicesArray, 1));
+
+        const uvsArray = new Float32Array(this.UVs);
+        geometry.setAttribute('uv', new BufferAttribute(uvsArray, 2));
+
+        // Texture
+        const objtexture = useTexture(
+            {
+                // map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                //displacement map cause alot of weird issues 
+                displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
+                normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
+                aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
+                roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
+            });
+        return (
+            <mesh geometry={geometry}>
+                <meshStandardMaterial
+                    attach="material"
+                    map={objtexture.map}
+                    normalMap={objtexture.normalMap}
+                    roughnessMap={objtexture.roughnessMap}
+                    aoMap={objtexture.aoMap}
+                    color={0xffffff}
+                    roughness={0.5}
+                    metalness={0.5}
+                    side={DoubleSide}
+                    wireframe={true}          // Enable wireframe mode
+                    wireframeLinewidth={2}
+                />
+            </mesh>
+        );
 
 
 
+    }
+    getRekt() {
+        const vertices = [0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0];
+        const indices = [0, 1, 2, 0, 2, 3];
+        const uvs = [0, 0, 1, 0, 1, 1, 0, 1]; // Basic UVs for a square
+        const objtexture = useTexture(
+            {
+                // map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                map: 'Textures/check.jpg',
+                //displacement map cause alot of weird issues 
+                // displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
+                //   normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
+                //   aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
+                // roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
+            });
+        const geometry = new BufferGeometry();
+
+        // Set vertices
+        const verticesArray = new Float32Array(vertices);
+        geometry.setAttribute('position', new BufferAttribute(verticesArray, 3));
+
+        // Set indices
+        const indicesArray = new Uint16Array(indices);
+        geometry.setIndex(new BufferAttribute(indicesArray, 1));
+
+        // Set UVs
+        const uvsArray = new Float32Array(uvs);
+        geometry.setAttribute('uv', new BufferAttribute(uvsArray, 2));
+
+        // Texture
+        const texture = useTexture('Textures/check.jpg');
+
+        return (
+            <mesh geometry={geometry}>
+                <meshBasicMaterial map={texture}
+
+                />
+            </mesh>
+        );
+    }
 }//class slice
 
 export default Vase;
