@@ -7,14 +7,16 @@ import { useTexture, Sphere, Cylinder } from "@react-three/drei";
 import { PLYExporter } from 'three/examples/jsm/exporters/PLYExporter';
 import React, { useRef, useEffect } from 'react';
 import { BufferGeometry, BufferAttribute, MeshBasicMaterial, Mesh } from 'three';
+import { Helper } from '@react-three/drei'; // Correct import from the library
+import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'; // Import the helper itself
 
 class Vase {
 
 
-    constructor(position = { x: 0, y: 0, z: 0 }, width = 10, slices = []) {
-        this.position = position;
+    constructor([x = 0, y = 0, z = 0], width = 10, slices = []) {
+        this.position = [x, y, z];
         this.slices = slices;
-        this.vertices = []; // Initialize vertices array here
+        this.vertices = [];
         this.width = width;
         this.UVs = []
         this.meshRef = React.createRef();
@@ -51,6 +53,7 @@ class Vase {
         this.slices.push(slice); // Push to the array
         // Update vertices whenever a slice is added
         this.calculateVerticesFromSlices(); // If you want vertices updated automatically
+        this.calculateIndicies()
     }
 
     removeSlice() {
@@ -73,16 +76,14 @@ class Vase {
     }
 
     //triangle faces
-    calculateIndicies(vertices, width) {
+    calculateIndicies() {
         /*
         Upward-Facing Triangle: indices.push(px1, px2, pl1);
         Downward-Facing Triangle: indices.push(px2, px1, pl0); flips normal
         both have Counter-clockwise winding but with different starting point to ensure proper consistent normals
         */
-
-
-        const loop = vertices.length / 3 / width;
-
+        let width = this.width;
+        const loop = this.vertices.length / 3 / width;
         var indices = [];
 
         for (let layer = 0; layer < loop; layer++) {
@@ -173,27 +174,123 @@ class Vase {
                 const v = 1 - (y / (numLayers - 1)); // Normalize V to [0, 1]
 
                 this.UVs.push(u);
-                this.UVs.push(v);
+                this.UVs.push(1 - v);
             }
         }
 
         return new Float32Array(this.UVs); // Return the calculated UVs
     } // CalculateUVs
 
-    calculateUVs2(fixedValue = 0.5) {
-        // ... (input validation remains the same)
-
+    calculateUVs2() {
+        // do some error handling 
+        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
+            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
+        }
         this.UVs = [];
+        const verticesPerLayer = this.vertices.length / 3; // Total vertices per layer
+        const numLayers = verticesPerLayer / this.width;
 
-        // Calculate the total number of UV coordinates needed (one per vertex)
-        const numUVs = this.vertices.length; // This will change to have one per wedge
+        for (let y = 0; y < numLayers; y++) {
+            for (let x = 0; x < this.width; x++) {
+                const u = (x + 1) % 2; // Normalize U to[0, 1]
+                // const u = 0.1 + x * 0.8 / (this.width - 1);
 
-        for (let i = 0; i < numUVs; i++) {
-            this.UVs.push(fixedValue, fixedValue);
+                let v = (y / (numLayers - 1)); // Normalize V to [0, 1]
+                this.UVs.push(u);
+                this.UVs.push(v);
+            }
+
         }
 
-        return new Float32Array(this.UVs);
-    }
+        return new Float32Array(this.UVs); // Return the calculated UVs
+    } // CalculateUVs
+
+
+    calculateUVs3() {
+        // do some error handling 
+        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
+            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
+        }
+        this.UVs = [];
+        const verticesPerLayer = this.vertices.length / 3; // Total vertices per layer
+        const numLayers = verticesPerLayer / this.width;
+
+        console.log(`postion.x = ${this.position[0]}`)
+        for (let i = 0; i < this.vertices.length; i += 3) {
+            const x = this.vertices[i];
+            const y = this.vertices[i + 1];
+
+            const u = (x + 1) / 2;
+            let v = (y / (numLayers - 1)); // Normalize V to [0, 1]
+
+            this.UVs.push(u);
+            this.UVs.push(v);
+
+            //  console.log(`uvs :${u} ${v}`);
+        }
+
+        return new Float32Array(this.UVs); // Return the calculated UVs
+    } // CalculateUVs
+
+
+    calculateUVs4() {
+        // do some error handling 
+        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
+            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
+        }
+        this.UVs = [];
+        const verticesPerLayer = this.vertices.length / 3; // Total vertices per layer
+        const numLayers = verticesPerLayer / this.width;
+
+
+
+        for (let y = 0; y < numLayers; y++) {
+            console.log(`width :${this.width}`);
+            for (let x = 0; x < this.width; x++) {
+                let u = x % 2;
+                let v = (y / (numLayers - 1)); // Normalize V to [0, 1]
+                this.UVs.push(u);
+                this.UVs.push(v);
+                console.log(`uvs :${u} ${v}`);
+            }
+
+        }
+
+
+
+        // radian_delta = 2*PI / num_slices;
+        // height_delta = height / num_segments;
+
+        // u_coord = (slice_index * radian_delta) / (2*PI);
+        // v_coord = (segment_index * height_delta) / height;
+
+        return new Float32Array(this.UVs); // Return the calculated UVs
+    } // CalculateUVs
+
+
+    calculateUVs5() {
+        // do some error handling 
+        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
+            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
+        }
+        this.UVs = [];
+        const verticesPerLayer = this.vertices.length / 3; // Total vertices per layer
+        const numLayers = verticesPerLayer / this.width;
+
+        for (let y = 0; y < numLayers; y++) {
+            for (let x = 0; x < this.width; x++) {
+                let u = (x + 1) % 2; // Normalize U to[0, 1]
+                // const u = 0.1 + x * 0.8 / (this.width - 1);
+                u = 1 / this.width * x;
+                let v = (y / (numLayers - 1)); // Normalize V to [0, 1]
+                this.UVs.push(u);
+                this.UVs.push(v);
+            }
+
+        }
+
+        return new Float32Array(this.UVs); // Return the calculated UVs
+    } // CalculateUVs
 
 
     //get obj where it returns R3F mesh
@@ -229,8 +326,8 @@ class Vase {
         //const colorMap = useLoader(TextureLoader, './Textures/Clay002_1K-JPG_Color.jpg')
         const objtexture = useTexture(
             {
-                // map: 'Textures/Clay002_1K-JPG_Color.jpg',
-                map: 'Textures/check.jpg',
+                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                // map: 'Textures/check.jpg',
                 //displacement map cause alot of weird issues 
                 displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
@@ -241,7 +338,7 @@ class Vase {
 
         //this.UVs = this.calculateUVs2(vertices, this.width);
 
-        exportMeshData(vertices, indices, objectnormals, this.UVs)
+        // exportMeshData(vertices, indices, objectnormals, this.UVs)
         console.log(`UVS ${this.UVs}`)
 
 
@@ -251,7 +348,6 @@ class Vase {
             let indices = indicess;
             let objectnormals = objectnormalss;
             let UVs = UVss;
-
             let plyData = `ply
           format ascii 1.0
           element vertex ${vertices.length / 3}
@@ -267,25 +363,20 @@ class Vase {
           property list uchar int vertex_indices
           end_header
           `;
-
             for (let i = 0; i < vertices.length; i += 3) {
                 plyData += `${vertices[i]} ${vertices[i + 1]} ${vertices[i + 2]} `; // Vertex coordinates
                 plyData += `${objectnormals[i]} ${objectnormals[i + 1]} ${objectnormals[i + 2]} `; // Normals
                 plyData += `${UVs[i / 3 * 2]} ${UVs[i / 3 * 2 + 1]}\n`; // UVs
             }
-
             for (let i = 0; i < indices.length; i += 3) {
                 plyData += `3 ${indices[i]} ${indices[i + 1]} ${indices[i + 2]}\n`; // Triangle faces
             }
-
             const blob = new Blob([plyData], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
-
             const link = document.createElement('a');
             link.href = url;
             link.download = 'mesh_data.ply'; // Use .ply extension
             link.click();
-
             URL.revokeObjectURL(url);
         }
 
@@ -356,9 +447,10 @@ class Vase {
 
     getMesh2() {
         const vertices = this.calculateVerticesFromSlices();
-        const indices = this.calculateIndicies(vertices, this.width);
+        const indices = this.calculateIndicies();
         const objectnormals = this.calculateNormals(vertices, indices);
-        this.calculateUVs();
+
+        this.calculateUVs3();
 
         const geometry = new BufferGeometry();
         const verticesArray = new Float32Array(vertices);
@@ -370,17 +462,30 @@ class Vase {
         const uvsArray = new Float32Array(this.UVs);
         geometry.setAttribute('uv', new BufferAttribute(uvsArray, 2));
 
+        const objectnormalsArray = new Float32Array(objectnormals);;
+        geometry.setAttribute('normal', new BufferAttribute(objectnormalsArray, 3));
+
+
+        //console.log(`vertices ${verticesArray.length} indices ${indicesArray.length} uvs ${uvsArray} uvs ${objectnormalsArray.length}`);
+
         // Texture
         const objtexture = useTexture(
             {
-                // map: 'Textures/Clay002_1K-JPG_Color.jpg',
-                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                //map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                //map: 'Textures/512x512 Texel Density Texture 1.png',
+                //map: 'Textures/4096x4096 Texel Density Texture 5.png',
+                map: 'Textures/check.jpg',
                 //displacement map cause alot of weird issues 
                 displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
                 aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
                 roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });
+
+
+        objtexture.map.magFilter = THREE.LinearFilter;
+        objtexture.map.minFilter = THREE.LinearMipmapLinearFilter;
+
         return (
             <mesh geometry={geometry}>
                 <meshStandardMaterial
@@ -393,15 +498,18 @@ class Vase {
                     roughness={0.5}
                     metalness={0.5}
                     side={DoubleSide}
-                    wireframe={true}          // Enable wireframe mode
-                    wireframeLinewidth={2}
+                // wireframe={true}          // Enable wireframe mode
+                // wireframeLinewidth={4}
+
                 />
+                {/*   <Helper type={VertexNormalsHelper} args={[1, 0xff0000]} /> */}
+
+
             </mesh>
+
         );
-
-
-
     }
+
     getRekt() {
         const vertices = [0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0];
         const indices = [0, 1, 2, 0, 2, 3];

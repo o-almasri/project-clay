@@ -51,18 +51,19 @@ function MyCamera() {
       polar={[-Math.PI / 3, Math.PI / 3]}
       azimuth={[-Math.PI / 1.4, Math.PI / 2]}>
       {/*<CustomVase/>*/}
-      {/* <Thingy /> */}
+      <Thingy />
     </PresentationControls>
 
-    <OrbitControls />
-    {/* <BoxObj /> */}
+    {/* <OrbitControls /> */}
+    <BoxObj />
     {/* <axesHelper args={[5]} /> */}
     {/* <Model /> */}
     {/* <Vas2e /> */}
     {/* <Object /> */}
     {/*adjust layer count for demo*/}
     {/* <Object2 /> */}
-    <Thingy />
+    {/* <Thingy /> */}
+
   </>);
 }
 
@@ -97,24 +98,30 @@ function BoxObj() {
 function Thingy() {
 
   //41703 max number of valeus 
-  let vase = new Vase([0, 0, 0], 30, []);
+  let vase = new Vase([0, 0, 0], 128, []);
 
   // vase.addSlice([0, 0, 0], 1, 0);
 
+
+
+  vase.addSlice([0, 0, 0], 0, .1);
+  vase.addSlice([0, 0, 0], 1, .2);
+  vase.addSlice([0, 0, 0], 1, .2);
+  vase.addSlice([0, 0, 0], 1, .2);
+  vase.addSlice([0, 0, 0], 1, .2);
+  vase.addSlice([0, 0, 0], 1, .2);
+  vase.addSlice([0, 0, 0], 1, .2);
+
   //vase shape
-  // vase.addSlice([0, 0, 0], 0, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
-  vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, 1);
+  // vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, .1);
+  // vase.addSlice([0, 0, 0], 1, .1);
 
 
 
@@ -131,35 +138,39 @@ function Thingy() {
 
 
   //vase
-  // vase.addSlice([0, 0, 0], 0, 1);
-  // vase.addSlice([0, 0, 0], 0.8, 1);
-  // vase.addSlice([0, 0, 0], 1, 1.5);
-  // vase.addSlice([0, 0, 0], 0.8, 1.75);
-  // vase.addSlice([0, 0, 0], 0.25, 2);
-  // vase.addSlice([0, 0, 0], 0.5, 2.25);
+  // vase.addSlice([0, 0, 0], 0, 0);
+  // vase.addSlice([0, 0, 0], 0.8, 0);
+  // vase.addSlice([0, 0, 0], 1, 0.5);
+  // vase.addSlice([0, 0, 0], 0.8, 0.25);
+  // vase.addSlice([0, 0, 0], 0.25, 0.25);
+  // vase.addSlice([0, 0, 0], 0.5, 0.25);
 
+  //good vase
   // vase.addSlice([0, 0, 0], 0, 1);
-  // vase.addSlice([0, 0, 0], 0.5, 1);
-  // vase.addSlice([0, 0, 0], 1, 2.5);
-  // vase.addSlice([0, 0, 0], 0.8, 2.75);
-  // vase.addSlice([0, 0, 0], 0.25, 3);
-  // vase.addSlice([0, 0, 0], 0.5, 3.25);
+  // vase.addSlice([0, 0, 0], 0.5, 0);
+  // vase.addSlice([0, 0, 0], 1, 1.5);
+  // vase.addSlice([0, 0, 0], 0.8, 0.25);
+  // vase.addSlice([0, 0, 0], 0.25, 0.25);
+  // vase.addSlice([0, 0, 0], 0.5, 0.25);
 
 
   //plate positin radius height
   // vase.addSlice([0, 0, 0], 0., 0);
   // vase.addSlice([0, 0, 0], 0.7, 0.01);
-  // vase.addSlice([0, 0, 0], 1, 0.05);
+  // vase.addSlice([0, 0, 0], 1, 0.04);
   // vase.addSlice([0, 0, 0], 0.99, 0.01);
 
 
   return (
-    // vase.getMesh()
+    //vase.getMesh()
     //vase.getRekt()
     vase.getMesh2()
   )
 
 }
+
+
+
 
 
 function Ground() {
