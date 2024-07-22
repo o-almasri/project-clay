@@ -36,26 +36,27 @@ class Slice {
 
 
 
-    constructor(position = { x: 0, y: 0, z: 0 }, width = 8, radius = 1, closed = false,) {
+
+
+    constructor(position = [0, 0, 0], width = 8, radius = 1, closed = false,) {
         this.position = position;
         this.width = width;
         this.radius = radius;
         this.closed = closed;
         this.vertices = [];
+        // console.log(`position ` + position)
+        // console.log(`this position ` + this.position)
         this.calculateVertices(this.position, this.radius, this.width);
 
     }
 
-    moveVertices(amount = { x: 0, y: 0, z: 0 }) {
-        if (!amount || typeof amount !== 'object') {
-            throw new Error('Invalid amount argument. Expected an object with x, y, z properties.');
-        }
+    moveVertices(amount = [0, 0, 0]) {
 
         if (this.vertices && this.vertices.length > 0) {
             for (let i = 0; i < this.vertices.length; i += 3) {
-                this.vertices[i] += amount.x;
-                this.vertices[i + 1] += amount.y;
-                this.vertices[i + 2] -= amount.z;  // Inverted if camera points towards -z
+                this.vertices[i] += amount[0];
+                this.vertices[i + 1] += amount[1];
+                this.vertices[i + 2] -= amount[2];  // Inverted if camera points towards -z
             }
         }
     }

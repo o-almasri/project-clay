@@ -43,6 +43,8 @@ function MyCamera() {
       far={1000} // Set the far clipping plane
       makeDefault
     />
+
+
     <PresentationControls
       global
       config={{ mass: 2, tension: 500 }}
@@ -51,18 +53,18 @@ function MyCamera() {
       polar={[-Math.PI / 3, Math.PI / 3]}
       azimuth={[-Math.PI / 1.4, Math.PI / 2]}>
       {/*<CustomVase/>*/}
-      <Thingy />
+      {/* <Thingy /> */}
     </PresentationControls>
 
-    {/* <OrbitControls /> */}
+    <OrbitControls />
     <BoxObj />
-    {/* <axesHelper args={[5]} /> */}
+    <axesHelper args={[5]} />
     {/* <Model /> */}
     {/* <Vas2e /> */}
     {/* <Object /> */}
     {/*adjust layer count for demo*/}
     {/* <Object2 /> */}
-    {/* <Thingy /> */}
+    <Thingy />
 
   </>);
 }
@@ -88,7 +90,8 @@ function BoxObj() {
 
   return (<>
     {/* BOX */}
-    <mesh position={[-1, -0.4, 0]} rotation={[0.1, -0.4, 0]} castShadow>
+    <mesh position={[-1, -0.4, 0]} castShadow>
+      {/* rotation={[0.1, -0.4, 0]}  */}
       <boxGeometry />
       <meshStandardMaterial color={colors.orange} />
     </mesh>
@@ -98,36 +101,31 @@ function BoxObj() {
 function Thingy() {
 
   //41703 max number of valeus 
-  let vase = new Vase([0, 0, 0], 128, []);
-
-  // vase.addSlice([0, 0, 0], 1, 0);
-
+  let pos = [0, 0, 0];
+  let vase = new Vase(pos, 128, []);
 
 
-  vase.addSlice([0, 0, 0], 0, .1);
-  vase.addSlice([0, 0, 0], 1, .2);
-  vase.addSlice([0, 0, 0], 1, .2);
-  vase.addSlice([0, 0, 0], 1, .2);
-  vase.addSlice([0, 0, 0], 1, .2);
-  vase.addSlice([0, 0, 0], 1, .2);
-  vase.addSlice([0, 0, 0], 1, .2);
+  // vase.addSlice(poss, 1, 0);
+  // vase.addSlice(poss, 1, 1);
+
+  // position , width , Relative height 
+  // vase.addSlice([0, 0, 0], 0, .1);
+  // vase.addSlice([0, 0, 0], 1, .2);
+  // vase.addSlice([0, 0, 0], 1, .2);
+  // vase.addSlice([0, 0, 0], 1, .2);
+  // vase.addSlice([0, 0, 0], 1, .2);
+  // vase.addSlice([0, 0, 0], 1, .2);
+  // vase.addSlice([0, 0, 0], 1, .2);
 
   //vase shape
-  // vase.addSlice([0, 0, 0], 1, .1);
-  // vase.addSlice([0, 0, 0], 1, 1);
-  // vase.addSlice([0, 0, 0], 1, .1);
-  // vase.addSlice([0, 0, 0], 1, .1);
-  // vase.addSlice([0, 0, 0], 1, .1);
-  // vase.addSlice([0, 0, 0], 1, .1);
-  // vase.addSlice([0, 0, 0], 1, .1);
-  // vase.addSlice([0, 0, 0], 1, .1);
-  // vase.addSlice([0, 0, 0], 1, .1);
+
 
 
 
 
 
   // position , radius , height 
+  //Hamada Rocket
   // vase.addSlice([0, 0, 0], 0, 0);
   // vase.addSlice([0, 0, 0], 0.5, 0.0);
   // vase.addSlice([0, 0, 0], 0.7, 0.5);
@@ -146,19 +144,24 @@ function Thingy() {
   // vase.addSlice([0, 0, 0], 0.5, 0.25);
 
   //good vase
-  // vase.addSlice([0, 0, 0], 0, 1);
-  // vase.addSlice([0, 0, 0], 0.5, 0);
-  // vase.addSlice([0, 0, 0], 1, 1.5);
-  // vase.addSlice([0, 0, 0], 0.8, 0.25);
-  // vase.addSlice([0, 0, 0], 0.25, 0.25);
-  // vase.addSlice([0, 0, 0], 0.5, 0.25);
+  vase.addSlice([0, 0, 0], 0, 0);
+  vase.addSlice([0, 0, 0], 0.25, 0);
+  vase.addSlice([0, 0, 0], 0.5, 0.75);
+  vase.addSlice([0, 0, 0], 0.4, 0.125);
+  vase.addSlice([0, 0, 0], 0.125, 0.125);
+  vase.addSlice([0, 0, 0], 0.25, 0.125);
 
 
   //plate positin radius height
-  // vase.addSlice([0, 0, 0], 0., 0);
-  // vase.addSlice([0, 0, 0], 0.7, 0.01);
-  // vase.addSlice([0, 0, 0], 1, 0.04);
-  // vase.addSlice([0, 0, 0], 0.99, 0.01);
+  // vase.addSlice(pos, 0., 0);
+  // vase.addSlice(pos, 0.35, 0.01);
+  // vase.addSlice(pos, 0.5, 0.02);
+  // vase.addSlice(pos, 0.48, -0.01);
+
+  vase.render();
+  let offset = [-1, 0.1, 0];
+  // vase.MOve(offset)
+
 
 
   return (
@@ -337,7 +340,7 @@ function calculateCircleVertices(position, radius, numPoints, layers, layerheigh
       vertices.push(x + position.x, y + position.y, z + position.z); // Push x, y, z coordinates individually
     }
   }
-  console.log(`vertices ${vertices}`)
+  //console.log(`vertices ${vertices}`)
   return new Float32Array(vertices); // Convert to Float32Array
 }
 
@@ -420,7 +423,7 @@ function calculateIndicies(vertices, width) {
         indices.push(px1);
         indices.push(px2);
         indices.push(pl1);
-        console.log(`Pushing = ${px1}  ${px2}  ${pl1} `)
+        //console.log(`Pushing = ${px1}  ${px2}  ${pl1} `)
 
       }
       if (layer - 1 >= 0) {
@@ -432,11 +435,11 @@ function calculateIndicies(vertices, width) {
         indices.push(px1);
         indices.push(pl0);
 
-        console.log(`Pushing low = ${px1}  ${px2}  ${pl0} `)
+        //console.log(`Pushing low = ${px1}  ${px2}  ${pl0} `)
       }
     }
   }
-  console.log(`indices ${indices}`)
+  //console.log(`indices ${indices}`)
   return new Uint32Array(indices);
 }
 

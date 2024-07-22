@@ -1,17 +1,20 @@
 import Slice from "./slice";
 import * as THREE from "three";
 import { DoubleSide } from 'three'
-import { useLoader } from '@react-three/fiber'
+import { useLoader, useFrame } from '@react-three/fiber'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
 import { useTexture, Sphere, Cylinder } from "@react-three/drei";
 import { PLYExporter } from 'three/examples/jsm/exporters/PLYExporter';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, createRef } from 'react';
 import { BufferGeometry, BufferAttribute, MeshBasicMaterial, Mesh } from 'three';
 import { Helper } from '@react-three/drei'; // Correct import from the library
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'; // Import the helper itself
 
-class Vase {
 
+
+
+
+class Vase {
 
     constructor([x = 0, y = 0, z = 0], width = 10, slices = []) {
         this.position = [x, y, z];
@@ -19,7 +22,8 @@ class Vase {
         this.vertices = [];
         this.width = width;
         this.UVs = []
-        this.meshRef = React.createRef();
+        this.meshRef = createRef();
+
         this.state = {
             currentTexture: null
         };
@@ -33,6 +37,16 @@ class Vase {
 
     updateTexture(newTexture) {
         this.setState({ currentTexture: newTexture });
+    }
+
+
+    render() {
+        // useFrame hook still works in class components
+        useFrame(() => {
+            if (this.meshRef.current) { // Always check for existence
+                this.meshRef.current.rotation.y -= 0.01;
+            }
+        })
     }
 
 
@@ -55,6 +69,19 @@ class Vase {
         this.calculateVerticesFromSlices(); // If you want vertices updated automatically
         this.calculateIndicies()
     }
+
+
+    MOve(position) {
+        this.vertices = []; // Reset vertices before recalculating
+        for (const slice of this.slices) {
+
+            slice.moveVertices(position)
+            this.vertices.push(...slice.getVertices()); // Use getVertices method
+        }
+
+    }
+
+
 
     removeSlice() {
         if (this.slices.length > 0) {
@@ -215,7 +242,7 @@ class Vase {
         const verticesPerLayer = this.vertices.length / 3; // Total vertices per layer
         const numLayers = verticesPerLayer / this.width;
 
-        console.log(`postion.x = ${this.position[0]}`)
+        //  console.log(`postion.x = ${this.position[0]}`)
         for (let i = 0; i < this.vertices.length; i += 3) {
             const x = this.vertices[i];
             const y = this.vertices[i + 1];
@@ -245,13 +272,13 @@ class Vase {
 
 
         for (let y = 0; y < numLayers; y++) {
-            console.log(`width :${this.width}`);
+            // console.log(`width :${this.width}`);
             for (let x = 0; x < this.width; x++) {
                 let u = x % 2;
                 let v = (y / (numLayers - 1)); // Normalize V to [0, 1]
                 this.UVs.push(u);
                 this.UVs.push(v);
-                console.log(`uvs :${u} ${v}`);
+                // console.log(`uvs :${u} ${v}`);
             }
 
         }
@@ -291,6 +318,39 @@ class Vase {
 
         return new Float32Array(this.UVs); // Return the calculated UVs
     } // CalculateUVs
+
+    calculateUVs6() {
+        // do some error handling 
+        if (!isFinite(this.width) || !isFinite(this.vertices.length) || this.width <= 0 || this.vertices.length <= 0) {
+            console.error(`Invalid width or vertices data: width=${this.width}, vertices.length=${this.vertices.length}`);
+        }
+        this.UVs = [];
+        const verticesPerLayer = this.vertices.length / 3; // Total vertices per layer
+        const numLayers = verticesPerLayer / this.width;
+
+        for (let y = 0; y < numLayers; y++) {
+            for (let x = this.width - 1; x >= 0; x--) { // Start from the rightmost vertex
+
+
+                const u = this.getReflectionValue(x, this.width);
+                let v = (y / (numLayers - 1));
+                this.UVs.push(u);
+                this.UVs.push(v);
+            }
+
+        }
+
+        return new Float32Array(this.UVs); // Return the calculated UVs
+    } // CalculateUVs
+
+
+    getReflectionValue(x, width) {
+        const midpoint = width / 2;
+        const distanceFromMidpoint = Math.abs(x - midpoint);
+        const output = (midpoint - distanceFromMidpoint) / midpoint;
+
+        return output;
+    }
 
 
     //get obj where it returns R3F mesh
@@ -339,7 +399,7 @@ class Vase {
         //this.UVs = this.calculateUVs2(vertices, this.width);
 
         // exportMeshData(vertices, indices, objectnormals, this.UVs)
-        console.log(`UVS ${this.UVs}`)
+        //  console.log(`UVS ${this.UVs}`)
 
 
 
@@ -450,7 +510,7 @@ class Vase {
         const indices = this.calculateIndicies();
         const objectnormals = this.calculateNormals(vertices, indices);
 
-        this.calculateUVs3();
+        this.calculateUVs6();
 
         const geometry = new BufferGeometry();
         const verticesArray = new Float32Array(vertices);
@@ -477,9 +537,9 @@ class Vase {
                 map: 'Textures/check.jpg',
                 //displacement map cause alot of weird issues 
                 displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
-                normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
+                //normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
                 aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
-                roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
+                //roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });
 
 
@@ -487,7 +547,7 @@ class Vase {
         objtexture.map.minFilter = THREE.LinearMipmapLinearFilter;
 
         return (
-            <mesh geometry={geometry}>
+            <mesh ref={this.meshRef} geometry={geometry}>
                 <meshStandardMaterial
                     attach="material"
                     map={objtexture.map}
