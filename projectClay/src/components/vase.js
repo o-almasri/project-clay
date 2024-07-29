@@ -41,14 +41,25 @@ class Vase {
 
 
     render() {
+
         // useFrame hook still works in class components
-        useFrame(() => {
+        useFrame(({ clock }) => {
+            this.meshRef.current.rotation.z = 0.1;
+
             if (this.meshRef.current) { // Always check for existence
-                this.meshRef.current.rotation.y -= 0.01;
+                this.meshRef.current.rotation.y -= 0.001;
+
+                this.meshRef.current.position.x = -1;
+                this.meshRef.current.position.y = this.oscillate(-0.4, -0.3, 1, clock.getElapsedTime()); // Sine
+
             }
         })
     }
-
+    oscillate(min, max, frequency, time) {
+        const mid = (min + max) / 2;
+        const amplitude = (max - min) / 2;
+        return mid + amplitude * Math.sin(frequency * time);
+    }
 
     //TODO::add a function to adjust slice radius and position and recalculate vertices
 
@@ -72,13 +83,11 @@ class Vase {
 
 
     MOve(position) {
-        this.vertices = []; // Reset vertices before recalculating
-        for (const slice of this.slices) {
-
-            slice.moveVertices(position)
-            this.vertices.push(...slice.getVertices()); // Use getVertices method
+        if (this.meshRef.current) { // Always check for existence
+            this.meshRef.current.position.x += position[0];
+            this.meshRef.current.position.y += position[1];
+            this.meshRef.current.position.z += position[2];
         }
-
     }
 
 
@@ -531,23 +540,27 @@ class Vase {
         // Texture
         const objtexture = useTexture(
             {
-                //map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                map: 'Textures/Clay002_1K-JPG_Color.jpg',
                 //map: 'Textures/512x512 Texel Density Texture 1.png',
+                //map: 'Textures/Marble/marble_0008_color_1k.jpg',
                 //map: 'Textures/4096x4096 Texel Density Texture 5.png',
-                map: 'Textures/check.jpg',
+                //map: 'Textures/check.jpg',
+                //map: 'Textures/Marble/marble_0008_color_1k.jpg',
                 //displacement map cause alot of weird issues 
-                displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
+                //displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 //normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
+                //normalMap: 'Textures/Marble/marble_0008_normal_opengl_1k.png',
+                //normalMap: 'Textures/concrete_0025_normal_opengl_4k.png',
                 aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
-                //roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
+                roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });
 
 
-        objtexture.map.magFilter = THREE.LinearFilter;
-        objtexture.map.minFilter = THREE.LinearMipmapLinearFilter;
+        // objtexture.map.magFilter = THREE.LinearFilter;
+        // objtexture.map.minFilter = THREE.LinearMipmapLinearFilter;
 
         return (
-            <mesh ref={this.meshRef} geometry={geometry}>
+            <mesh ref={this.meshRef} geometry={geometry} castShadow >
                 <meshStandardMaterial
                     attach="material"
                     map={objtexture.map}
@@ -555,8 +568,8 @@ class Vase {
                     roughnessMap={objtexture.roughnessMap}
                     aoMap={objtexture.aoMap}
                     color={0xffffff}
-                    roughness={0.5}
-                    metalness={0.5}
+                    roughness={0.2}//0.5
+                    metalness={0.2}//0.5
                     side={DoubleSide}
                 // wireframe={true}          // Enable wireframe mode
                 // wireframeLinewidth={4}

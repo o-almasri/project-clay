@@ -13,8 +13,10 @@ import {
   InstancedMesh,
   Sphere,
   Helper,
-  VertexNormalsHelper
+  VertexNormalsHelper,
+  useTexture
 } from "@react-three/drei";
+
 import { View } from "react-native";
 import { Canvas, useFrame } from "@react-three/fiber";
 import styles, { colors } from "../styles/styles";
@@ -37,8 +39,8 @@ function MyCamera() {
     <PerspectiveCamera
 
       fov={50}
-      position={[0, 0, 5]} // Set the camera's position
-      rotation={[0, 0, 0]} // Set the camera's rotation
+      position={[-0.5, 0.5, 2]} // Set the camera's position
+      rotation={[-0.2, 0, 0]} // Set the camera's rotation
       near={0.1} // Set the near clipping plane
       far={1000} // Set the far clipping plane
       makeDefault
@@ -56,9 +58,9 @@ function MyCamera() {
       {/* <Thingy /> */}
     </PresentationControls>
 
-    <OrbitControls />
+    {/* <OrbitControls /> */}
     <BoxObj />
-    <axesHelper args={[5]} />
+    {/* <axesHelper args={[5]} /> */}
     {/* <Model /> */}
     {/* <Vas2e /> */}
     {/* <Object /> */}
@@ -75,6 +77,7 @@ export default function MyCanvas() {
       <MyCamera />
       <ambientLight intensity={2} />
       <directionalLight position={[5, 10, 5]} intensity={4} castShadow />
+      {/* <directionalLight position={[2, 10, 2]} intensity={4} castShadow /> */}
       <Shadows />
       <Ground />
 
@@ -87,13 +90,51 @@ export default function MyCanvas() {
 
 function BoxObj() {
 
+  const objtexture = useTexture(
+    {
+      map: 'Textures/Marble/marble_0008_color_1k.jpg',
+      // map: 'Textures/512x512 Texel Density Texture 1.png',
+      normalMap: 'Textures/Marble/marble_0008_normal_opengl_1k.png',
+      aoMap: 'Textures/Marble/marble_0008_ao_1k.jpg',
+      roughnessMap: 'Textures/Marble/marble_0008_roughness_1k.jpg',
+
+      //tile
+      // map: 'Textures/Tile/tiles_0109_color_1k.jpg',
+      // // map: 'Textures/512x512 Texel Density Texture 1.png',
+      // normalMap: 'Textures/Marble/marble_0008_normal_opengl_1k.png',
+      // aoMap: 'Textures/Tile/tiles_0109_ao_1k.jpg',
+      // roughnessMap: 'Textures/Marble/marble_0008_roughness_1k.jpg',
+
+      //wood
+      // map: 'Textures/wood/wood_0066_color_1k.jpg',
+      // // map: 'Textures/512x512 Texel Density Texture 1.png',
+      // normalMap: 'Textures/wood/wood_0066_normal_opengl_1k.png',
+      // aoMap: 'Textures/wood/wood_0066_ao_1k.jpg',
+      // roughnessMap: 'Textures/wood/wood_0066_roughness_1k.jpg',
+
+    });
 
   return (<>
     {/* BOX */}
-    <mesh position={[-1, -0.4, 0]} castShadow>
-      {/* rotation={[0.1, -0.4, 0]}  */}
+    <mesh position={[-1, -0.5, 0]} scale={[1.5, 0.2, 1.5]} castShadow receiveShadow>
+      rotation={[0.1, -0.4, 0]}
       <boxGeometry />
-      <meshStandardMaterial color={colors.orange} />
+      <meshStandardMaterial
+        attach="material"
+        map={objtexture.map}
+        repeat={[0.5, 0.5]}
+        normalMap={objtexture.normalMap}
+        roughnessMap={objtexture.roughnessMap}
+        aoMap={objtexture.aoMap}
+
+        //color={colors.orange}
+        //  roughness={0}//0.5
+        metalness={0.2}//0.5
+      // side={DoubleSide}
+      // wireframe={true}          // Enable wireframe mode
+      // wireframeLinewidth={4}
+
+      />
     </mesh>
 
   </>);
@@ -102,7 +143,7 @@ function Thingy() {
 
   //41703 max number of valeus 
   let pos = [0, 0, 0];
-  let vase = new Vase(pos, 128, []);
+  let vase = new Vase(pos, 512, []);
 
 
   // vase.addSlice(poss, 1, 0);
@@ -158,6 +199,12 @@ function Thingy() {
   // vase.addSlice(pos, 0.5, 0.02);
   // vase.addSlice(pos, 0.48, -0.01);
 
+
+
+
+
+
+
   vase.render();
   let offset = [-1, 0.1, 0];
   // vase.MOve(offset)
@@ -182,7 +229,8 @@ function Ground() {
       {/* Ground Plane */}
       <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[10, 10]} />
-        <meshStandardMaterial color={colors.teal} />
+        {/* <meshStandardMaterial color={colors.teal} /> */}
+        <meshStandardMaterial color={colors.white} />
         {/* Set the plane's color to match the background */}
       </mesh>
     </>
