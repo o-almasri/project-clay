@@ -56,7 +56,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     pointerEvents: 'auto',
   },
-  ScrollView: { width: "100%", alignItems: "center" },
+  ScrollView: { width: "100%", alignItems: "center", },
+  noScroll: {
+    showsVerticalScrollIndicator: 'false',
+  },
   input: {
     borderColor: colors.pinkish,
     width: "95%",
@@ -130,9 +133,17 @@ const styles = StyleSheet.create({
   nomargin: {
     marginTop: 0,
   },
+  marginTop: {
+    marginTop: 20,
+  },
   errorText: {
     color: "red",
     marginBottom: 10,
+  },
+  containerfill: {
+
+    alignitems: 'space-between',
+
   },
 });
 
