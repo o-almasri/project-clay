@@ -9,6 +9,7 @@ import React, { useRef, useEffect, createRef } from 'react';
 import { BufferGeometry, BufferAttribute, MeshBasicMaterial, Mesh } from 'three';
 import { Helper } from '@react-three/drei'; // Correct import from the library
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'; // Import the helper itself
+import { normalMap } from "three/examples/jsm/nodes/Nodes.js";
 
 
 
@@ -551,6 +552,7 @@ class Vase {
                 //normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
                 //normalMap: 'Textures/Marble/marble_0008_normal_opengl_1k.png',
                 //normalMap: 'Textures/concrete_0025_normal_opengl_4k.png',
+                // normalMap: 'Textures/Clay_001_normal.jpg',
                 aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
                 roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });

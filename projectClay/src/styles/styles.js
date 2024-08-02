@@ -2,7 +2,8 @@ import { Scroll } from "@react-three/drei";
 import { StyleSheet, Dimensions } from "react-native";
 import { ScrollView } from "react-native-web";
 
-const windowWidth = Dimensions.get("window").width;
+let windowWidth = Dimensions.get("window").width;
+let windowHeight = Dimensions.get("window").height;
 export const colors = {
   white: "rgba(235, 235, 235, 1)", // Blue
   black: "rgba(60, 60, 60, 1)", // White
@@ -145,6 +146,24 @@ const styles = StyleSheet.create({
     alignitems: 'space-between',
 
   },
+  Center: {
+    alignItems: "center",
+  },
+  width_80: {
+    width: windowWidth <= 900 ? "95%" : "80%",
+  },
+  height_80: {
+    height: "80%",
+  },
+  card_Full: {
+    width: windowWidth <= 900 ? "95%" : "80%",
+    backgroundColor: colors.white,
+    padding: "1%",
+    borderRadius: 20,
+    pointerEvents: 'auto',
+    marginTop: '2%',
+
+  }
 });
 
 export default styles; // Default export

@@ -59,7 +59,7 @@ function MyCamera() {
     </PresentationControls>
 
     {/* <OrbitControls /> */}
-    <BoxObj />
+    {/* <BoxObj /> */}
     {/* <axesHelper args={[5]} /> */}
     {/* <Model /> */}
     {/* <Vas2e /> */}
