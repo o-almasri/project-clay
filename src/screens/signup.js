@@ -10,8 +10,8 @@ import {
 
 import { TabView, SceneMap } from 'react-native-tab-view';
 
-import styles from "../styles/styles";
-
+import styles, { colors } from "../styles/styles";
+import Select from 'react-select'
 
 
 
@@ -33,7 +33,7 @@ function signupfunc() {
 
     const handlesignup = () => {
         if (validateInput()) {
-            console.log("New Record To Be Sent", email, newpassword, phone, street, city, country);
+            console.log("New Record To Be Sent", email, newpassword, phone, street, city, country, isSelected);
             setEmail("");
             setnewPassword("");
             setnewPassword2("");
@@ -41,15 +41,41 @@ function signupfunc() {
             setStreet("");
             setCity("");
             setCountry("");
-
             setErrors({});
 
         }
     }
 
+    const setphonenumber = () => {
+        //TODO:: Validate Phone number where it only accepts text and combine country code with phone 
+    }
+
+
     const validatePass = () => {
         //TODO: Regex Check Password Match and criteria  
     }
+
+
+    const countryOptions = [
+        { value: 'CA', label: 'Canada' },
+        { value: 'JO', label: 'Jordan' },
+        { value: 'US', label: 'United States' }
+    ]
+
+    const phoneOptions = [
+        { value: 'CA', label: 'Canada (+1)' },
+        { value: 'JO', label: 'Jordan (+962)' },
+        { value: 'US', label: 'United States (+1)' },
+        { value: 'BR', label: 'Brazil (+55)' },
+        { value: 'CN', label: 'China (+86)' },
+        { value: 'FR', label: 'France (+33)' },
+        { value: 'DE', label: 'Germany (+49)' },
+        { value: 'IN', label: 'India (+91)' },
+        { value: 'JP', label: 'Japan (+81)' },
+        { value: 'MX', label: 'Mexico (+52)' },
+        { value: 'RU', label: 'Russia (+7)' },
+        { value: 'ZA', label: 'South Africa (+27)' }
+    ]
 
     //signUP functions
     const validateInput = () => {
@@ -108,7 +134,40 @@ function signupfunc() {
                 <Text style={styles.formText}>Phone</Text>
                 {errors.phone ? <Text style={styles.errorText}>{errors.phone}</Text> : null}
             </View>
-            <TextInput style={styles.input} value={phone} onChangeText={setPhone} />
+
+
+            <TextInput style={[styles.input]} value={phone} onChangeText={setPhone} />
+
+            {/*TODO:: FIX STYling for this*/}
+            <Select
+                styles={{
+                    control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: state.isFocused ? colors.teal : colors.pinkish,
+                        borderRadius: '10px',
+                        width: '10%',
+                    }),
+                    menu: (baseStyles) => ({  // <-- Add this section
+                        ...baseStyles,
+                        width: '20%',
+                    }),
+                    option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        backgroundColor: state.isFocused ? colors.teal : colors.white,  // Example colors
+                        // color: state.isFocused ? 'black' : 'black',               // Example colors
+                        ':hover': {                                               // Hover styles
+                            backgroundColor: colors.teal,
+                            color: colors.white,
+                        },
+                    }),
+                }}
+                // defaultValue={countryOptions[0]}
+                isClearable={true}
+                isSearchable={true}
+                name="PhoneOptions"
+                options={phoneOptions}
+                onChange={(selectedOption) => { setPhone(selectedOption.value ? selectedOption.value : "") }}
+            />
 
 
             {/*street*/}
@@ -130,8 +189,38 @@ function signupfunc() {
                 <Text style={styles.formText}>country</Text>
                 {errors.country ? <Text style={styles.errorText}>{errors.country}</Text> : null}
             </View>
-            <TextInput style={styles.input} value={country} onChangeText={setCountry} />
-
+            {/* <Select style={styles.input} options={countryOptions} /> */}
+            {/* <TextInput style={styles.input} value={country} onChangeText={setCountry} /> */}
+            <Select
+                styles={{
+                    control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: state.isFocused ? colors.teal : colors.pinkish,
+                        width: '95%',
+                        borderRadius: '10px',
+                    }),
+                    menu: (baseStyles) => ({  // <-- Add this section
+                        ...baseStyles,
+                        width: '95%',       // <-- Set your desired width here
+                    }),
+                    option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        backgroundColor: state.isFocused ? colors.teal : colors.white,  // Example colors
+                        // color: state.isFocused ? 'black' : 'black',               // Example colors
+                        ':hover': {                                               // Hover styles
+                            backgroundColor: colors.teal,
+                            color: colors.white,
+                        },
+                    }),
+                }}
+                // defaultValue={countryOptions[0]}
+                isClearable={true}
+                isSearchable={true}
+                name="Country"
+                options={countryOptions}
+                value={country}
+                onChange={(selectedOption) => { setCountry(selectedOption ? selectedOption : "") }}
+            />
             <View style={styles.checkboxContainer}>
                 <CheckBox
                     value={isSelected}

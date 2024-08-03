@@ -163,7 +163,19 @@ const styles = StyleSheet.create({
     pointerEvents: 'auto',
     marginTop: '2%',
 
-  }
+  },
+  inputcontainer: {
+    flexDirection: 'row', // Arrange elements horizontally
+    width: '85%',
+  },
+  firstElement: {
+    flex: 1,             // 10% of available space
+
+  },
+  secondElement: {
+    flex: 8.5,           // 85% of available space
+
+  },
 });
 
 export default styles; // Default export

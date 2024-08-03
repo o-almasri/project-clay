@@ -36,7 +36,7 @@ function Form() {
   const [routes] = useState([
     { key: 'first', title: 'AboutUs' },
     { key: 'second', title: 'Login' },
-    { key: 'third', title: 'SignUP' },
+
   ]);
 
 
@@ -276,7 +276,7 @@ function Form() {
   const renderScene = SceneMap({
     first: aboutus,
     second: login,
-    third: signup,
+
   });
 
 

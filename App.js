@@ -6,8 +6,8 @@ import Signup from './src/screens/signup';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Signup />
-      {/* <Main /> */}
+      {/* <Signup /> */}
+      <Main />
     </View>
   );
 }
