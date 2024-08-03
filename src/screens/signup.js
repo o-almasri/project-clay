@@ -33,12 +33,38 @@ function signupfunc() {
 
     const handlesignup = () => {
         if (validateInput()) {
-            console.log("Submitted", email, newpassword);
+            console.log("New Record To Be Sent", email, newpassword, phone, street, city, country);
             setEmail("");
             setnewPassword("");
+            setnewPassword2("");
+            setPhone("");
+            setStreet("");
+            setCity("");
+            setCountry("");
+
             setErrors({});
 
         }
+    }
+
+    const validatePass = () => {
+        //TODO: Regex Check Password Match and criteria  
+    }
+
+    //signUP functions
+    const validateInput = () => {
+        let errors = {}
+        if (!email) errors.email = "Email is required"
+        if (!newpassword) errors.newpassword = "password is required"
+        if (!newpassword2) errors.newpassword2 = "Password Mismatch"
+        if (!phone) errors.phone = "Phone is required"
+        if (!street) errors.street = "Street is required"
+        if (!city) errors.city = "City is required"
+        if (!country) errors.country = "Country is required"
+
+        setErrors(errors)
+        return Object.keys(errors).length === 0;
+
     }
 
 
@@ -55,14 +81,10 @@ function signupfunc() {
                 </Pressable>
             </Text>
 
-            <Text style={styles.subtitle}>
-                Lets Start by choosing username and password !
-            </Text>
-
-            {/*UserName*/}
+            {/*Email/UserName*/}
             <View style={styles.formTextView}>
-                {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
                 <Text style={styles.formText} >Email</Text>
+                {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
             </View>
             <TextInput style={styles.input} value={email} onChangeText={setEmail} />
 
@@ -144,7 +166,7 @@ export default function singup() {
 
         <ScrollView contentContainerStyle={[styles.Center,]}>
             <View style={[styles.card_Full, styles.shadow,]}>
-                {/* {signupfunc()} */}
+                {signupfunc()}
             </View>
         </ScrollView >
 

@@ -113,8 +113,9 @@ function Form() {
 
         {/*UserName*/}
         <View style={styles.formTextView}>
-          {errors.username ? <Text style={styles.errorText}>{errors.username}</Text> : null}
+
           <Text style={styles.formText} >UserName</Text>
+          {errors.username ? <Text style={styles.errorText}>{errors.username}</Text> : null}
         </View>
         <TextInput style={styles.input} value={name} onChangeText={setName} />
 

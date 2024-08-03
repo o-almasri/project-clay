@@ -9,7 +9,7 @@ import React, { useRef, useEffect, createRef } from 'react';
 import { BufferGeometry, BufferAttribute, MeshBasicMaterial, Mesh } from 'three';
 import { Helper } from '@react-three/drei'; // Correct import from the library
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'; // Import the helper itself
-import { normalMap } from "three/examples/jsm/nodes/Nodes.js";
+
 
 
 
