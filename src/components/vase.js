@@ -551,8 +551,6 @@ class Vase {
                 //displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 //normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
                 //normalMap: 'Textures/Marble/marble_0008_normal_opengl_1k.png',
-                //normalMap: 'Textures/concrete_0025_normal_opengl_4k.png',
-                // normalMap: 'Textures/Clay_001_normal.jpg',
                 aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
                 roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });

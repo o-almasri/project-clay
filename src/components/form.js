@@ -105,7 +105,7 @@ function Form() {
         <Text style={styles.subtitle}>
           Don't have an account ?{" "}
           <Pressable onPress={() => {
-            setIndex(2)
+            // go to login
           }}>
             <Text style={styles.formText}>SignUp</Text>
           </Pressable>
@@ -290,6 +290,10 @@ function Form() {
     />
     )
   }
+
+
+
+
 
   return (
     <View style={styles.cardContainer}>
