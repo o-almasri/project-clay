@@ -10,6 +10,7 @@ export const colors = {
   pinkish: "rgba(193, 131, 159, 1)", // Orange
   orange: "rgba(255, 90, 95, 1)", // Grey
   teal: "rgba(8, 126, 139, 1)", // Light Grey
+  green: "rgba(60, 179, 113, 1)", // Light Grey
   /*
   white: "rgba(235, 235, 235, 1)", // Blue
   black: "rgba(60, 60, 60, 1)", // White
@@ -176,6 +177,30 @@ const styles = StyleSheet.create({
     flex: 8.5,           // 85% of available space
 
   },
+
+  // home screen styles
+  maxwidth: {
+    maxWidth: '20%',
+  },
+  section: {
+    flexDirection: 'row', // Arrange items horizontally
+    justifyContent: 'space-around', // Distribute space evenly around items
+    alignItems: 'center', // Center items vertically (if needed)
+    paddingHorizontal: 15, // Optional: Add padding for better visual spacing
+
+  },
+  scrollViewContent: {
+    flexGrow: 1, // Allow content to expand and fill available space
+    justifyContent: 'space-around', // Distribute vertically with equal spacing
+    paddingHorizontal: '10%',
+  },
+  skcard: {
+    backgroundColor: '#E0E0E0', // Light grey color
+    borderRadius: 8,           // Optional: rounded corners
+    height: 150,               // Adjust height as needed
+    width: '90%',               // Adjust width as needed
+    margin: 10,
+  }
 });
 
 export default styles; // Default export

@@ -188,6 +188,9 @@ function Thingy() {
   vase.addSlice([0, 0, 0], 0, 0);
   vase.addSlice([0, 0, 0], 0.25, 0);
   vase.addSlice([0, 0, 0], 0.5, 0.75);
+
+
+
   vase.addSlice([0, 0, 0], 0.4, 0.125);
   vase.addSlice([0, 0, 0], 0.125, 0.125);
   vase.addSlice([0, 0, 0], 0.25, 0.125);

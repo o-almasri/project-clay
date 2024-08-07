@@ -541,10 +541,10 @@ class Vase {
         // Texture
         const objtexture = useTexture(
             {
-                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                //map: 'Textures/Clay002_1K-JPG_Color.jpg',
                 //map: 'Textures/512x512 Texel Density Texture 1.png',
                 //map: 'Textures/Marble/marble_0008_color_1k.jpg',
-                //map: 'Textures/4096x4096 Texel Density Texture 5.png',
+                map: 'Textures/4096x4096 Texel Density Texture 5.png',
                 //map: 'Textures/check.jpg',
                 //map: 'Textures/Marble/marble_0008_color_1k.jpg',
                 //displacement map cause alot of weird issues 
