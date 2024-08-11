@@ -20,7 +20,7 @@ import {
 import { View } from "react-native";
 import { Canvas, useFrame } from "@react-three/fiber";
 import styles, { colors } from "../styles/styles";
-import { useRef, forwardRef } from 'react'
+import { useRef, forwardRef, useState } from 'react'
 import { useLoader, useThree } from '@react-three/fiber'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import * as THREE from "three";
@@ -34,6 +34,8 @@ import Slice from "./slice";
 
 
 function MyCamera() {
+
+
 
   return (<>
     <PerspectiveCamera

@@ -21,7 +21,7 @@ const section = () => {
                 <Pressable style={[styles.btn, styles.maxwidth]} onPress={() => {
                     // go to login
                 }}>
-                    <Text style={[styles.buttonText,]}>Add Project</Text>
+                    <Text style={[styles.buttonText,]}>New Design</Text>
                 </Pressable>
             </View>
 
@@ -35,33 +35,25 @@ const section = () => {
 
 
             <View style={[styles.section]}>
-                <Pressable style={[styles.btn, styles.maxwidth]} onPress={() => {
-                    // go to login
-                }}>
-                    <Text style={[styles.buttonText,]}>Try Me</Text>
-                </Pressable>
-
-                <Pressable style={[styles.btn, styles.maxwidth]} onPress={() => {
-                    // go to login
-                }}>
-                    <Text style={[styles.buttonText,]}>Try Me</Text>
-                </Pressable>
-
-                <Pressable style={[styles.btn, styles.maxwidth]} onPress={() => {
-                    // go to login
-                }}>
-                    <Text style={[styles.buttonText,]}>Try Me</Text>
-                </Pressable>
+                <CustomCard />
+                <CustomCard />
+                <CustomCard />
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '100%' }}>
                 <View style={{ flex: 1, height: 2, backgroundColor: 'black' }} />
                 <View>
-                    <Text style={[styles.buttonText, { width: 100, textAlign: 'center', color: colors.black }]}>Suggested Designs</Text>
+                    <Text style={[styles.buttonText, { width: 100, textAlign: 'center', color: colors.black }]}>My History</Text>
                 </View>
                 <View style={{ flex: 1, height: 2, backgroundColor: 'black' }} />
             </View>
 
+
+            <View style={[styles.section]}>
+                <CustomCard />
+                <CustomCard />
+                <CustomCard />
+            </View>
 
 
 

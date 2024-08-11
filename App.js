@@ -7,6 +7,14 @@ import Home from './src/screens/home';
 export default function App() {
   return (
 
+    //header 
+    // footer
+    // my profile
+    // choose design to work on page
+    // sculpting page
+    // react router
+
+
     <View style={styles.container}>
       {/* <Signup /> */}
       {/* <Main /> */}

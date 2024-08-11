@@ -191,14 +191,15 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1, // Allow content to expand and fill available space
-    justifyContent: 'space-around', // Distribute vertically with equal spacing
     paddingHorizontal: '10%',
+    justifyContent: 'space-evenly', // Evenly space cards horizontally
+    width: '100%',  // Ensure ScrollView takes full width
   },
   skcard: {
     backgroundColor: '#E0E0E0', // Light grey color
     borderRadius: 8,           // Optional: rounded corners
-    height: 150,               // Adjust height as needed
-    width: '90%',               // Adjust width as needed
+    height: '10vw',
+    width: '10vw',
     margin: 10,
   }
 });
