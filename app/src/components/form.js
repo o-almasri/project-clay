@@ -106,7 +106,7 @@ function Form() {
           Don't have an account ?{" "}
           <Pressable onPress={() => {
             // go to login
-            router.replace('/signup');
+            router.navigate('/src/screens/signup');
           }}>
             <Text style={styles.formText}>SignUp</Text>
           </Pressable>

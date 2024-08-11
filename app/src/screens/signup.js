@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import { TabView, SceneMap } from 'react-native-tab-view';
-
+import { router } from 'expo-router';
 import styles, { colors } from "../styles/styles";
 import Select from 'react-select'
 
@@ -101,7 +101,7 @@ function signupfunc() {
             <Text style={styles.subtitle}>
                 Already have an account ?{" "}
                 <Pressable onPress={() => {
-                    setIndex(1)
+                    router.navigate('/src/screens/main');
                 }}>
                     <Text style={styles.formText}>Login</Text>
                 </Pressable>

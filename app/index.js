@@ -1,4 +1,4 @@
-import Main from "../src/screens/main";
+import Main from "./src/screens/main";
 
 
 export default function index() {
