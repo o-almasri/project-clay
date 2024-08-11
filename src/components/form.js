@@ -11,7 +11,7 @@ import {
 import { TabView, SceneMap } from 'react-native-tab-view';
 
 import styles from "../styles/styles";
-
+import { router } from 'expo-router';
 
 function Form() {
   const [isSelected, setSelection] = useState(false);
@@ -106,6 +106,7 @@ function Form() {
           Don't have an account ?{" "}
           <Pressable onPress={() => {
             // go to login
+            router.replace('/signup');
           }}>
             <Text style={styles.formText}>SignUp</Text>
           </Pressable>
