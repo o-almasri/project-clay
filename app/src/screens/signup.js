@@ -6,6 +6,7 @@ import {
     TextInput,
     Pressable,
     CheckBox,
+    Alert,
 } from "react-native";
 
 import { TabView, SceneMap } from 'react-native-tab-view';
@@ -13,7 +14,8 @@ import { router } from 'expo-router';
 import styles, { colors } from "../styles/styles";
 import Select from 'react-select'
 
-
+import NavMenu from "../components/navMenu";
+import Footer from "../components/Footer";
 
 
 
@@ -31,6 +33,10 @@ function signupfunc() {
     const [errors, setErrors] = useState({});
     const [isSelected, setSelection] = useState(false);
 
+
+
+
+
     const handlesignup = () => {
         if (validateInput()) {
             console.log("New Record To Be Sent", email, newpassword, phone, street, city, country, isSelected);
@@ -43,17 +49,47 @@ function signupfunc() {
             setCountry("");
             setErrors({});
 
+            router.navigate('');
         }
     }
 
-    const setphonenumber = () => {
-        //TODO:: Validate Phone number where it only accepts text and combine country code with phone 
-    }
 
+    function setphonenumber(text) {
+        // // Remove non-numeric characters from the phone number
+        const numericPhone = text.replace(/[^0-9]/g, '');
 
-    const validatePass = () => {
+        // Check if the numeric phone number has a valid length
+        if (numericPhone.length < 10) {
+            setPhone(numericPhone)
+        }
+        else if (numericPhone.length >= 10 && numericPhone.length <= 15) {
+            setPhone(numericPhone); // Update the state with the valid phone number
+        } else {
+            // Show an alert for invalid phone number
+            Alert.alert('Invalid Phone Number', 'Please enter a valid phone number.');
+        }
+    };
+
+    function validatePass() {
         //TODO: Regex Check Password Match and criteria  
-    }
+        let isValid = true;
+        let newErrors = {};
+
+        // Check if passwords match
+        if (newpassword !== newpassword2) {
+            isValid = false;
+            newErrors.newpassword2 = 'Passwords do not match';
+        }
+
+        // Password criteria check (adjust as needed)
+        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        // if (!passwordRegex.test(newpassword)) {
+        //     isValid = false;
+        //     newErrors.newpassword = 'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character';
+        // }
+        return isValid;
+    };
+
 
 
     const countryOptions = [
@@ -88,6 +124,10 @@ function signupfunc() {
         if (!city) errors.city = "City is required"
         if (!country) errors.country = "Country is required"
 
+        if (!validatePass()) {
+            errors.passwordmismatch = "Password Mismatch"
+        }
+
         setErrors(errors)
         return Object.keys(errors).length === 0;
 
@@ -101,7 +141,7 @@ function signupfunc() {
             <Text style={styles.subtitle}>
                 Already have an account ?{" "}
                 <Pressable onPress={() => {
-                    router.navigate('/src/screens/main');
+                    router.navigate('');
                 }}>
                     <Text style={styles.formText}>Login</Text>
                 </Pressable>
@@ -116,16 +156,18 @@ function signupfunc() {
 
 
             {/*Password*/}
+
             <View style={styles.formTextView}>
                 <Text style={styles.formText}>Password</Text>
                 {errors.newpassword ? <Text style={styles.errorText}>{errors.newpassword}</Text> : null}
             </View>
             <TextInput style={styles.input} secureTextEntry={true} value={newpassword} onChangeText={setnewPassword} />
-
+            {errors.passwordmismatch ? <Text style={styles.errorText}>{errors.passwordmismatch}</Text> : null}
             {/*password verification*/}
             <View style={styles.formTextView}>
                 <Text style={styles.formText}>Repeat Password</Text>
                 {errors.newpassword2 ? <Text style={styles.errorText}>{errors.newpassword2}</Text> : null}
+
             </View>
             <TextInput style={styles.input} secureTextEntry={true} value={newpassword2} onChangeText={setnewPassword2} />
 
@@ -133,10 +175,17 @@ function signupfunc() {
             <View style={styles.formTextView}>
                 <Text style={styles.formText}>Phone</Text>
                 {errors.phone ? <Text style={styles.errorText}>{errors.phone}</Text> : null}
+
             </View>
 
 
-            <TextInput style={[styles.input]} value={phone} onChangeText={setPhone} />
+            <TextInput
+                style={[styles.input]}
+                keyboardType="numeric"
+                value={phone} // Add the value prop here
+                onChangeText={(text) => { setphonenumber(text) }}
+            />
+
 
             {/*TODO:: FIX STYling for this*/}
             <Select
@@ -166,7 +215,7 @@ function signupfunc() {
                 isSearchable={true}
                 name="PhoneOptions"
                 options={phoneOptions}
-                onChange={(selectedOption) => { setPhone(selectedOption.value ? selectedOption.value : "") }}
+            //onChange={(selectedOption) => { setPhone(selectedOption.value ? selectedOption.value : "") }}
             />
 
 
@@ -244,6 +293,7 @@ function signupfunc() {
             </Pressable>
 
             <Text style={styles.formText}>{isSelected ? "checked" : ""}{"name"}{"password"}</Text>
+
         </View>
 
     );
@@ -251,14 +301,19 @@ function signupfunc() {
 
 export default function singup() {
     return (
+        <>
 
+            <NavMenu />
+            <ScrollView >
+                <View style={[styles.Center,]}>
+                    <View style={[styles.card_Full, styles.shadow,]}>
+                        {signupfunc()}
+                    </View>
+                </View>
+                <Footer />
+            </ScrollView >
 
-        <ScrollView contentContainerStyle={[styles.Center,]}>
-            <View style={[styles.card_Full, styles.shadow,]}>
-                {signupfunc()}
-            </View>
-        </ScrollView >
-
+        </>
     );
 }
 

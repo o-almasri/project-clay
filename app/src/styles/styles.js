@@ -1,5 +1,5 @@
 import { Scroll } from "@react-three/drei";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, PixelRatio } from "react-native";
 import { ScrollView } from "react-native-web";
 
 let windowWidth = Dimensions.get("window").width;
@@ -20,8 +20,11 @@ export const colors = {
   */
   // ... add more colors as needed
 };
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = size => size / fontScale;
 const styles = StyleSheet.create({
   //entire page container
+
   container: {
     flex: 1,
     backgroundColor: colors.white,
@@ -91,6 +94,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: "2%",
     width: "95%",
+
   },
   buttonText: {
     color: colors.white,
@@ -180,13 +184,16 @@ const styles = StyleSheet.create({
 
   // home screen styles
   maxwidth: {
-    maxWidth: '20%',
+    maxWidth: windowWidth <= 900 ? "95%" : '20%',
+
   },
   section: {
     flexDirection: 'row', // Arrange items horizontally
-    justifyContent: 'space-around', // Distribute space evenly around items
+    justifyContent: 'center', // Distribute space evenly around items
     alignItems: 'center', // Center items vertically (if needed)
     paddingHorizontal: 15, // Optional: Add padding for better visual spacing
+    margin: 20,
+
 
   },
   scrollViewContent: {
@@ -201,7 +208,46 @@ const styles = StyleSheet.create({
     height: '10vw',
     width: '10vw',
     margin: 10,
-  }
+  },
+  //nav menu
+
+  navcontainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    padding: 10,
+  },
+  footercontainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: colors.teal,
+    padding: 10,
+    marginTop: 20,
+
+  },
+  navItem: {
+    padding: 10,
+  },
+  navText: {
+    fontSize: getFontSize(20),
+    textAlign: 'center',
+    color: colors.orange,
+    fontWeight: 'bold',
+    padding: 10,
+  },
+  footerText: {
+    fontSize: getFontSize(25),
+    textAlign: 'center',
+    color: colors.white,
+    fontWeight: 'bold',
+    padding: 10,
+  },
+  logo: {
+    width: '10vw', // Adjust width as needed
+    height: '3.5vw',  // Adjust height as needed
+  },
 });
 
 export default styles; // Default export
