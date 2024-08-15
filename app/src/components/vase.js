@@ -3,10 +3,10 @@ import * as THREE from "three";
 import { DoubleSide } from 'three'
 import { useLoader, useFrame } from '@react-three/fiber'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
-import { useTexture, Sphere, Cylinder } from "@react-three/drei";
+import { useTexture, Sphere, Cylinder, MeshTransmissionMaterial } from "@react-three/drei";
 import { PLYExporter } from 'three/examples/jsm/exporters/PLYExporter';
 import React, { useRef, useEffect, createRef } from 'react';
-import { BufferGeometry, BufferAttribute, MeshBasicMaterial, Mesh } from 'three';
+import { BufferGeometry, BufferAttribute, MeshPhysicalMaterial, MeshBasicMaterial, Mesh } from 'three';
 import { Helper } from '@react-three/drei'; // Correct import from the library
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'; // Import the helper itself
 
@@ -541,10 +541,10 @@ class Vase {
         // Texture
         const objtexture = useTexture(
             {
-                //map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                map: 'Textures/Clay002_1K-JPG_Color.jpg',
                 //map: 'Textures/512x512 Texel Density Texture 1.png',
                 //map: 'Textures/Marble/marble_0008_color_1k.jpg',
-                map: 'Textures/4096x4096 Texel Density Texture 5.png',
+                // map: 'Textures/4096x4096 Texel Density Texture 5.png',
                 //map: 'Textures/check.jpg',
                 //map: 'Textures/Marble/marble_0008_color_1k.jpg',
                 //displacement map cause alot of weird issues 
@@ -554,6 +554,25 @@ class Vase {
                 aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
                 roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
             });
+        // objtexture.map.minFilter = THREE.LinearMipmapLinearFilter;
+        // objtexture.map.wrapS = THREE.RepeatWrapping;
+        // objtexture.map.wrapT = THREE.RepeatWrapping;
+        // objtexture.map.repeat.set(2, 0.5); // Repeat the color map twice in both directions
+        const objtexture2 = useTexture(
+            {
+                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                //map: 'Textures/512x512 Texel Density Texture 1.png',
+                //map: 'Textures/Marble/marble_0008_color_1k.jpg',
+                //map: 'Textures/4096x4096 Texel Density Texture 5.png',
+                //map: 'Textures/check.jpg',
+                //map: 'Textures/Marble/marble_0008_color_1k.jpg',
+                //displacement map cause alot of weird issues 
+                //displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
+                //normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
+                //normalMap: 'Textures/Marble/marble_0008_normal_opengl_1k.png',
+                //aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
+                //roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
+            });
 
 
         // objtexture.map.magFilter = THREE.LinearFilter;
@@ -561,6 +580,7 @@ class Vase {
 
         return (
             <mesh ref={this.meshRef} geometry={geometry} castShadow >
+
                 <meshStandardMaterial
                     attach="material"
                     map={objtexture.map}
@@ -568,14 +588,21 @@ class Vase {
                     roughnessMap={objtexture.roughnessMap}
                     aoMap={objtexture.aoMap}
                     color={0xffffff}
-                    roughness={0.2}//0.5
-                    metalness={0.2}//0.5
+                    roughness={5}//0.5
+                    metalness={0.5}//0.5
                     side={DoubleSide}
-                // wireframe={true}          // Enable wireframe mode
-                // wireframeLinewidth={4}
-
+                    // wireframe={true}          // Enable wireframe mode
+                    // wireframeLinewidth={4}
+                    transparent={true}
+                    opacity={1}
                 />
-                {/*   <Helper type={VertexNormalsHelper} args={[1, 0xff0000]} /> */}
+                {/* <MeshTransmissionMaterial map={objtexture.map} backside thickness={0.2} side={DoubleSide}
+                    anisotropicBlur={0.2} chromaticAberration={0.2} clearcoat={0.2}
+                    transparent={true}
+                    opacity={1}
+                /> */}
+
+                {/* <MeshTransmissionMaterial thickness={0.2} side={DoubleSide} /> */}
 
 
             </mesh>

@@ -18,10 +18,9 @@ import {
 } from "@react-three/drei";
 
 import { View } from "react-native";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import styles, { colors } from "../styles/styles";
-import { useRef, forwardRef, useState } from 'react'
-import { useLoader, useThree } from '@react-three/fiber'
+import { useRef, forwardRef, useState, useEffect } from 'react'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import * as THREE from "three";
 import { useGesture } from '@use-gesture/react';
@@ -41,7 +40,7 @@ function MyCamera() {
     <PerspectiveCamera
 
       fov={50}
-      position={[-0.5, 0.5, 2]} // Set the camera's position
+      position={[-0.5, 0.5, 3]} // Set the camera's position
       rotation={[-0.2, 0, 0]} // Set the camera's rotation
       near={0.1} // Set the near clipping plane
       far={1000} // Set the far clipping plane
@@ -60,7 +59,7 @@ function MyCamera() {
       {/* <Thingy /> */}
     </PresentationControls>
 
-    {/* <OrbitControls /> */}
+    <OrbitControls />
     {/* <BoxObj /> */}
     {/* <axesHelper args={[5]} /> */}
     {/* <Model /> */}
@@ -74,15 +73,39 @@ function MyCamera() {
 }
 
 export default function MyCanvas() {
+  const canvasRef = useRef(null);
+
+
+  useEffect(() => {
+    const handleWheel = (event) => {
+      const deltaY = event.deltaY; // Get vertical scroll amount
+
+      // Apply your desired effect based on deltaY
+      console.log("Wheel Scroll:", deltaY);
+
+    };
+
+    const canvas = canvasRef.current;
+    canvas.addEventListener('wheel', handleWheel);
+
+    return () => {
+      canvas.removeEventListener('wheel', handleWheel);
+
+    };
+  }, []);
+
+
+
   return (
-    <Canvas style={styles.canvas} shadows>
+    <Canvas style={styles.canvas} ref={canvasRef} shadows>
       <MyCamera />
       <ambientLight intensity={2} />
       <directionalLight position={[5, 10, 5]} intensity={4} castShadow />
       {/* <directionalLight position={[2, 10, 2]} intensity={4} castShadow /> */}
       <Shadows />
       <Ground />
-
+      <Environment preset="forest" background backgroundBlurriness={0.5} />
+      {/* <Environment preset="warehouse" backgroundBlurriness={0.1} /> */}
     </Canvas>
 
 
@@ -164,7 +187,20 @@ function Thingy() {
 
 
 
-
+  //fab shit
+  // vase.addSlice([0, 0, 0], .0, 0);
+  // vase.addSlice([0, 0, 0], .4, 0);
+  // vase.addSlice([0, 0, 0], .95, .9);
+  // vase.addSlice([0, 0, 0], .2, 0.8);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .2, 1);
+  // vase.addSlice([0, 0, 0], .9, 0.5);
 
 
   // position , radius , height 
@@ -179,23 +215,20 @@ function Thingy() {
 
 
   //vase
-  // vase.addSlice([0, 0, 0], 0, 0);
-  // vase.addSlice([0, 0, 0], 0.8, 0);
-  // vase.addSlice([0, 0, 0], 1, 0.5);
-  // vase.addSlice([0, 0, 0], 0.8, 0.25);
-  // vase.addSlice([0, 0, 0], 0.25, 0.25);
-  // vase.addSlice([0, 0, 0], 0.5, 0.25);
+  vase.addSlice([0, 0, 0], 0, 0);
+  vase.addSlice([0, 0, 0], 0.8, 0);
+  vase.addSlice([0, 0, 0], 1, 0.5);
+  vase.addSlice([0, 0, 0], 0.8, 0.25);
+  vase.addSlice([0, 0, 0], 0.25, 0.25);
+  vase.addSlice([0, 0, 0], 0.5, 0.25);
 
   //good vase
-  vase.addSlice([0, 0, 0], 0, 0);
-  vase.addSlice([0, 0, 0], 0.25, 0);
-  vase.addSlice([0, 0, 0], 0.5, 0.75);
-
-
-
-  vase.addSlice([0, 0, 0], 0.4, 0.125);
-  vase.addSlice([0, 0, 0], 0.125, 0.125);
-  vase.addSlice([0, 0, 0], 0.25, 0.125);
+  // vase.addSlice([0, 0, 0], 0, 0);
+  // vase.addSlice([0, 0, 0], 0.25, 0);
+  // vase.addSlice([0, 0, 0], 0.5, 0.75);
+  // vase.addSlice([0, 0, 0], 0.4, 0.125);
+  // vase.addSlice([0, 0, 0], 0.125, 0.125);
+  // vase.addSlice([0, 0, 0], 0.25, 0.125);
 
 
   //plate positin radius height
@@ -234,7 +267,8 @@ function Ground() {
       {/* Ground Plane */}
       <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[10, 10]} />
-        <meshStandardMaterial color={colors.teal} />
+        {/* <meshStandardMaterial color={colors.teal} /> */}
+        <shadowMaterial transparent opacity={0.4} />
         {/* <meshStandardMaterial color={colors.white} /> */}
         {/* Set the plane's color to match the background */}
       </mesh>
@@ -246,7 +280,7 @@ function Shadows() {
   return (<><ContactShadows
     resolution={512}
     position={[0, -44.8, 0]}
-    opacity={0}
+    opacity={1}
     scale={100}
     blur={0}
     far={0.8}
