@@ -10,6 +10,7 @@ import MyCanvas from "../components/MyCanvas";
 import CustomCard from "../components/CustomCard";
 import NavMenu from "../components/navMenu";
 import Footer from "../components/Footer";
+import { router } from 'expo-router';
 const section = () => {
 
     return (
@@ -20,7 +21,8 @@ const section = () => {
 
                 <View style={[, styles.section]}>
                     <Pressable style={[styles.btn, styles.maxwidth]} onPress={() => {
-                        // go to login
+                        // go to selection screen
+                        router.navigate('/src/screens/selection');
                     }}>
                         <Text style={[styles.buttonText,]}>New Design</Text>
                     </Pressable>

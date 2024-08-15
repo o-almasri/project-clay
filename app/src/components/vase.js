@@ -597,7 +597,7 @@ class Vase {
                     opacity={1}
                 />
                 {/* <MeshTransmissionMaterial map={objtexture.map} backside thickness={0.2} side={DoubleSide}
-                    anisotropicBlur={0.2} chromaticAberration={0.2} clearcoat={0.2}
+                    anisotropicBlur={0.8} chromaticAberration={0.2} clearcoat={0.2}
                     transparent={true}
                     opacity={1}
                 /> */}

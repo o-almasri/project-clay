@@ -104,7 +104,7 @@ export default function MyCanvas() {
       {/* <directionalLight position={[2, 10, 2]} intensity={4} castShadow /> */}
       <Shadows />
       <Ground />
-      <Environment preset="forest" background backgroundBlurriness={0.5} />
+      <Environment preset="warehouse" background backgroundBlurriness={1} />
       {/* <Environment preset="warehouse" backgroundBlurriness={0.1} /> */}
     </Canvas>
 

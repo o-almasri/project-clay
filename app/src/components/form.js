@@ -17,14 +17,6 @@ function Form() {
   const [isSelected, setSelection] = useState(false);
 
 
-  //for signup
-  const [email, setEmail] = useState("");
-  const [newpassword, setnewPassword] = useState("");
-  const [newpassword2, setnewPassword2] = useState("");
-  const [phone, setPhone] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
 
   //for login
   const [name, setName] = useState("");
@@ -38,6 +30,8 @@ function Form() {
     { key: 'second', title: 'Login' },
 
   ]);
+
+
 
 
   //Login Functions
@@ -59,40 +53,27 @@ function Form() {
       setName("");
       setPassword("");
       setErrors({});
+      // http://localhost:8081/src/screens/selection
 
+      router.navigate('/src/screens/home');
     }
   }
 
-  //signUP functions
-  const validateInput = () => {
-    let errors = {}
-    if (!email) errors.email = "Email is required"
-    if (!newpassword) errors.newpassword = "password is required"
-    if (!newpassword2) errors.newpassword2 = "Password Mismatch"
-    if (!phone) errors.phone = "Phone is required"
-    if (!street) errors.street = "Street is required"
-    if (!city) errors.city = "City is required"
-    if (!country) errors.country = "Country is required"
+  function setphonenumber(text) {
+    // // Remove non-numeric characters from the phone number
+    const numericPhone = text.replace(/[^0-9]/g, '');
 
-    setErrors(errors)
-    return Object.keys(errors).length === 0;
-
-  }
-
-  const validatePass = () => {
-
-  }
-
-  const handlesignup = () => {
-    if (validateInput()) {
-      console.log("Submitted", email, newpassword);
-      setEmail("");
-      setnewPassword("");
-      setErrors({});
-
+    // Check if the numeric phone number has a valid length
+    if (numericPhone.length < 10) {
+      setPhone(numericPhone)
     }
-  }
-
+    else if (numericPhone.length >= 10 && numericPhone.length <= 15) {
+      setPhone(numericPhone); // Update the state with the valid phone number
+    } else {
+      // Show an alert for invalid phone number
+      Alert.alert('Invalid Phone Number', 'Please enter a valid phone number.');
+    }
+  };
 
   const next = () => {
     setIndex(1)
@@ -151,104 +132,7 @@ function Form() {
   }
 
 
-  //TODO: Start by asking for phone number and then navigate to external screen
-  //TODO: Edit The Code to minimize layout shift as its BAAAD
-  function signup() {
-    return (
-      <>
-        <View style={styles.ScrollView}>
-          <Text style={styles.title}>Signup </Text>
-          <Text style={styles.subtitle}>
-            Already have an account ?{" "}
-            <Pressable onPress={() => {
-              setIndex(1)
-            }}>
-              <Text style={styles.formText}>Login</Text>
-            </Pressable>
-          </Text>
 
-          <Text style={styles.subtitle}>
-            Lets Start by choosing username and password !
-          </Text>
-
-          {/*UserName*/}
-          <View style={styles.formTextView}>
-            {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
-            <Text style={styles.formText} >Email</Text>
-          </View>
-          <TextInput style={styles.input} value={email} onChangeText={setEmail} />
-
-
-          {/*Password*/}
-          <View style={styles.formTextView}>
-            <Text style={styles.formText}>Password</Text>
-            {errors.newpassword ? <Text style={styles.errorText}>{errors.newpassword}</Text> : null}
-          </View>
-          <TextInput style={styles.input} secureTextEntry={true} value={newpassword} onChangeText={setnewPassword} />
-
-          {/*password verification*/}
-          <View style={styles.formTextView}>
-            <Text style={styles.formText}>Repeat Password</Text>
-            {errors.newpassword2 ? <Text style={styles.errorText}>{errors.newpassword2}</Text> : null}
-          </View>
-          <TextInput style={styles.input} secureTextEntry={true} value={newpassword2} onChangeText={setnewPassword2} />
-
-          {/*Phone*/}
-          <View style={styles.formTextView}>
-            <Text style={styles.formText}>Phone</Text>
-            {errors.phone ? <Text style={styles.errorText}>{errors.phone}</Text> : null}
-          </View>
-          <TextInput style={styles.input} value={phone} onChangeText={setPhone} />
-
-
-          {/*street*/}
-          <View style={styles.formTextView}>
-            <Text style={styles.formText}>street</Text>
-            {errors.street ? <Text style={styles.errorText}>{errors.street}</Text> : null}
-          </View>
-          <TextInput style={styles.input} value={street} onChangeText={setStreet} />
-
-          {/*city*/}
-          <View style={styles.formTextView}>
-            <Text style={styles.formText}>city</Text>
-            {errors.city ? <Text style={styles.errorText}>{errors.city}</Text> : null}
-          </View>
-          <TextInput style={styles.input} value={city} onChangeText={setCity} />
-
-          {/*country*/}
-          <View style={styles.formTextView}>
-            <Text style={styles.formText}>country</Text>
-            {errors.country ? <Text style={styles.errorText}>{errors.country}</Text> : null}
-          </View>
-          <TextInput style={styles.input} value={country} onChangeText={setCountry} />
-
-          <View style={styles.checkboxContainer}>
-            <CheckBox
-              value={isSelected}
-              onValueChange={setSelection}
-              style={styles.checkbox}
-            />
-
-            <Text style={[styles.subtitle, styles.nomargin]}>
-              I agree to{" "}
-              <Pressable onPress={() => {
-                //TODO:: Navigate to TermsAnd Conditions Page
-              }}>
-                <Text style={styles.formText}>Terms and Conditions</Text>
-              </Pressable>
-            </Text>
-
-          </View>
-
-          <Pressable style={styles.btn} onPress={handlesignup}>
-            <Text style={styles.buttonText}>Create Account</Text>
-          </Pressable>
-
-          <Text style={styles.formText}>{isSelected ? "checked" : ""}{name}{password}</Text>
-        </View>
-      </>
-    );
-  }
 
   function aboutus() {
     return (
@@ -299,7 +183,7 @@ function Form() {
   return (
     <View style={styles.cardContainer}>
       <View style={[styles.card, styles.shadow]}>
-        <ScrollView style={styles.noScroll}>
+        <ScrollView style={styles.noScroll} >
           {navigator()}
         </ScrollView>
       </View>

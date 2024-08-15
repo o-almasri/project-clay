@@ -94,7 +94,7 @@ export default function Selection() {
                 </ScrollControls>
 
 
-                <Environment preset="warehouse" />
+                <Environment preset="warehouse" background backgroundBlurriness={0.5} />
             </Canvas>
 
 
