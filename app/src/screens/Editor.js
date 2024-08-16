@@ -38,7 +38,7 @@ import Footer from "../components/Footer";
 
 import Vase from "../components/vase";
 import EVase from "../components/EVase";
-
+import { button, useControls } from 'leva'
 
 
 
@@ -47,28 +47,63 @@ export default function Editor() {
 
     const canvasRef = useRef(null);
     const [slices, setSlices] = useState([]);
+    const { width, height, Texture } = useControls({
+
+        width: { value: 0.5, min: 0.05, max: 0.8 },
+        height: { value: 0.125, min: 0.01, max: 0.3 },
+
+        Load_Preset: button(() => {
+            loadpreset();
+        }),
+        Randomize: button(() => {
+            randomize();
+        }),
+
+        Texture: { value: 1, min: 1, max: 3, step: 1 },
+        GoToCheckout: button(() => {
+            randomize();
+        }),
+    });
+
+
+    useEffect(() => {
+
+        if (slices.length > 2) {
+            removeSlice();
+            addSlice();
+        } else {
+            addSlice();
+        }
+
+    }, [width, height,]);
+
+
+
 
     const addSlice = () => {
+
         if (slices.length <= 1) {
             setSlices(() => [
                 { position: [0, 0, 0], width: 0, height: 0 },
-                { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0 },
+                { position: [0, 0, 0], width: width, height: 0 },
             ]);
         } else
             if (slices.length < 11) {
                 setSlices(prevSlices => [
                     ...prevSlices,
-                    { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0.125 }
+                    { position: [0, 0, 0], width: width, height: height }
 
                 ]);
             } else if (slices.length == 11) {
                 setSlices(prevSlices => prevSlices.slice(0, -1));
                 setSlices(prevSlices => [
                     ...prevSlices,
-                    { position: [0, 0, 0], width: Math.random() * 0.6 + 0.1, height: 0.125 }
+                    { position: [0, 0, 0], width: Math.random() * 0.6 + 0.1, height: height }
 
                 ]);
             }
+
+        console.log(slices.length + "slices");
     };
 
     const removeSlice = () => {
@@ -95,12 +130,13 @@ export default function Editor() {
         setSlices(() => [
             { position: [0, 0, 0], width: 0, height: 0 },
             { position: [0, 0, 0], width: 0.25, height: 0 },
-            { position: [0, 0, 0], width: 0.25, height: 0.125 },
+            { position: [0, 0, 0], width: 0.27, height: 0.125 },
+            { position: [0, 0, 0], width: 0.35, height: 0.125 },
+            { position: [0, 0, 0], width: 0.43, height: 0.125 },
             { position: [0, 0, 0], width: 0.51, height: 0.125 },
-            { position: [0, 0, 0], width: 0.72, height: 0.125 },
-            { position: [0, 0, 0], width: 0.78, height: 0.125 },
-            { position: [0, 0, 0], width: 0.84, height: 0.125 },
-            { position: [0, 0, 0], width: 0.9, height: 0.125 },
+            { position: [0, 0, 0], width: 0.59, height: 0.125 },
+            { position: [0, 0, 0], width: 0.60, height: 0.125 },
+
             { position: [0, 0, 0], width: 0.4, height: 0.125 },
             { position: [0, 0, 0], width: 0.125, height: 0.125 },
             { position: [0, 0, 0], width: 0.25, height: 0.125 },
@@ -257,7 +293,7 @@ function Myvase({ slices }) {
     // Add slices based on the state
     if (slices && slices.length > 0)
         slices.forEach(slice => {
-            console.log(slice)
+            // console.log(slice)
             vase.addSlice([0, 0, 0], slice.width, slice.height);
         });
 
