@@ -136,7 +136,7 @@ function signupfunc() {
 
     return (
 
-        <View>
+        <View >
             <Text style={styles.title}>Signup </Text>
             <Text style={styles.subtitle}>
                 Already have an account ?{" "}
@@ -305,7 +305,7 @@ export default function singup() {
 
             <NavMenu />
             <ScrollView >
-                <View style={[styles.Center,]}>
+                <View style={[styles.Center, styles.margin_bottom]}>
                     <View style={[styles.card_Full, styles.shadow,]}>
                         {signupfunc()}
                     </View>

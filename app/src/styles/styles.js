@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.teal,
     padding: 10,
-    marginTop: 20,
+    //marginTop: 20,
 
   },
   navItem: {
@@ -248,6 +248,9 @@ const styles = StyleSheet.create({
     width: '10vw', // Adjust width as needed
     height: '3.5vw',  // Adjust height as needed
   },
+  margin_bottom: {
+    marginBottom: 20,
+  }
 });
 
 export default styles; // Default export

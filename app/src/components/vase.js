@@ -40,18 +40,22 @@ class Vase {
         this.setState({ currentTexture: newTexture });
     }
 
+    NextTexture(num) {
+        this.setState({ currentTexture: newTexture });
+    }
+
 
     render() {
 
         // useFrame hook still works in class components
         useFrame(({ clock }) => {
-            this.meshRef.current.rotation.z = 0.1;
+            //  this.meshRef.current.rotation.z = 0.1;
 
             if (this.meshRef.current) { // Always check for existence
-                this.meshRef.current.rotation.y -= 0.001;
+                this.meshRef.current.rotation.y -= 0.01;
 
-                this.meshRef.current.position.x = -1;
-                this.meshRef.current.position.y = this.oscillate(-0.4, -0.3, 1, clock.getElapsedTime()); // Sine
+                //this.meshRef.current.position.x = -1;
+                // this.meshRef.current.position.y = this.oscillate(-0.4, -0.3, 1, clock.getElapsedTime()); // Sine
 
             }
         })
@@ -541,7 +545,8 @@ class Vase {
         // Texture
         const objtexture = useTexture(
             {
-                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                //map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                map: '/Textures/Clay002_1K-JPG_Color.jpg',
                 //map: 'Textures/512x512 Texel Density Texture 1.png',
                 //map: 'Textures/Marble/marble_0008_color_1k.jpg',
                 // map: 'Textures/4096x4096 Texel Density Texture 5.png',
@@ -551,8 +556,8 @@ class Vase {
                 //displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 //normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
                 //normalMap: 'Textures/Marble/marble_0008_normal_opengl_1k.png',
-                aoMap: 'Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
-                roughnessMap: 'Textures/Clay002_1K-JPG_Roughness.jpg',
+                aoMap: '/Textures/Clay002_1K-JPG_AmbientOcclusion.jpg',
+                roughnessMap: '/Textures/Clay002_1K-JPG_Roughness.jpg',
             });
         // objtexture.map.minFilter = THREE.LinearMipmapLinearFilter;
         // objtexture.map.wrapS = THREE.RepeatWrapping;
@@ -560,7 +565,7 @@ class Vase {
         // objtexture.map.repeat.set(2, 0.5); // Repeat the color map twice in both directions
         const objtexture2 = useTexture(
             {
-                map: 'Textures/Clay002_1K-JPG_Color.jpg',
+                map: '/Textures/Clay002_1K-JPG_Color.jpg',
                 //map: 'Textures/512x512 Texel Density Texture 1.png',
                 //map: 'Textures/Marble/marble_0008_color_1k.jpg',
                 //map: 'Textures/4096x4096 Texel Density Texture 5.png',
@@ -597,7 +602,7 @@ class Vase {
                     opacity={1}
                 />
                 {/* <MeshTransmissionMaterial map={objtexture.map} backside thickness={0.2} side={DoubleSide}
-                    anisotropicBlur={0.8} chromaticAberration={0.2} clearcoat={0.2}
+                    anisotropicBlur={0} chromaticAberration={0} clearcoat={0}
                     transparent={true}
                     opacity={1}
                 /> */}

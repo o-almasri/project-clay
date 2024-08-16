@@ -46,56 +46,56 @@ export default function Selection() {
 
         <>
 
-            {/* <NavMenu />
-            <View style={[styles.Center, { width: '80vw', height: '80vh' }]}>
-                <View style={[{ width: '90%', height: '75%' }]}>
-                    
+            <NavMenu />
+            <View style={[styles.Center, { width: '100vw', height: '80vh' }]}>
+                <View style={[{ width: '100%', height: '100%' }]}>
+                    <Canvas style={styles.canvas} ref={canvasRef} shadows >
+                        <PerspectiveCamera
+
+                            fov={50}
+                            position={[0, 0.5, 6]} // Set the camera's position
+                            rotation={[-0.2, 0, 0]} // Set the camera's rotation
+                            near={0.1} // Set the near clipping plane
+                            far={1000} // Set the far clipping plane
+                            makeDefault
+                        />
+                        <ambientLight intensity={1} />
+                        <directionalLight position={[5, 10, 5]} intensity={1} castShadow />
+
+                        <Shadows />
+                        <Ground />
+
+                        <ScrollControls pages={4} infinite>
+                            <Rig rotation={[0, 0, 0]}>
+                                {[...Array(numCubes)].map((_, index) => {
+                                    const angle = (index / numCubes) * Math.PI * 2; // Calculate angle for each cube
+                                    const x = radius * Math.cos(angle);
+                                    const z = radius * Math.sin(angle);
+                                    if (index == 0) {
+                                        return <Cube2 key={index} position={[x, 0, z]} />;
+                                    } else if (index == 1) {
+                                        return <Cube2 key={index} position={[x, 0, z]} />;
+                                    } else if (index == 2) {
+                                        return <Cube2 key={index} position={[x, 0, z]} />;
+                                    } else {
+                                        return <Dodecahedron key={index} position={[x, 0, z]} />;
+                                    }
+
+                                })}
+
+
+                            </Rig>
+
+                        </ScrollControls>
+
+
+                        <Environment preset="warehouse" background backgroundBlurriness={0.5} />
+                    </Canvas>
                 </View>
             </View>
-            <Footer /> */}
-
-            <Canvas style={styles.canvas} ref={canvasRef} shadows >
-                <PerspectiveCamera
-
-                    fov={50}
-                    position={[0, 0.5, 6]} // Set the camera's position
-                    rotation={[-0.2, 0, 0]} // Set the camera's rotation
-                    near={0.1} // Set the near clipping plane
-                    far={1000} // Set the far clipping plane
-                    makeDefault
-                />
-                <ambientLight intensity={1} />
-                <directionalLight position={[5, 10, 5]} intensity={1} castShadow />
-
-                <Shadows />
-                <Ground />
-
-                <ScrollControls pages={4} infinite>
-                    <Rig rotation={[0, 0, 0]}>
-                        {[...Array(numCubes)].map((_, index) => {
-                            const angle = (index / numCubes) * Math.PI * 2; // Calculate angle for each cube
-                            const x = radius * Math.cos(angle);
-                            const z = radius * Math.sin(angle);
-                            if (index == 0) {
-                                return <Cube2 key={index} position={[x, 0, z]} />;
-                            } else if (index == 1) {
-                                return <Cube2 key={index} position={[x, 0, z]} />;
-                            } else if (index == 2) {
-                                return <Cube2 key={index} position={[x, 0, z]} />;
-                            } else {
-                                return <Dodecahedron key={index} position={[x, 0, z]} />;
-                            }
-
-                        })}
+            <Footer />
 
 
-                    </Rig>
-
-                </ScrollControls>
-
-
-                <Environment preset="warehouse" background backgroundBlurriness={0.5} />
-            </Canvas>
 
 
         </>
@@ -174,7 +174,7 @@ function Cube2(props, { position }) {
             <mesh ref={meshRef}
                 position={position}
                 scale={clicked ? 1 : 0.5}
-                onClick={() => { click(!clicked), router.navigate(''); }}
+                onClick={() => { click(!clicked), router.navigate('/src/screens/Editor'); }}
                 onPointerOver={() => hover(true)}
                 onPointerOut={() => hover(false)}>
                 <boxGeometry />
