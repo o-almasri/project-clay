@@ -85,13 +85,13 @@ export default function Selection() {
 
             setSlices3(() => [
                 { position: [0, 0, 0], width: 0, height: 0 },
-                { position: [0, 0, 0], width: 0.2, height: 0 },
-                { position: [0, 0, 0], width: 0.25, height: 0.125 },
-                { position: [0, 0, 0], width: 0.25, height: 0.125 },
-                { position: [0, 0, 0], width: 0.2, height: 0.125 },
-                { position: [0, 0, 0], width: 0.1, height: 0.06 },
-                { position: [0, 0, 0], width: 0.1, height: 0.06 },
-                { position: [0, 0, 0], width: 0.15, height: 0.06 },
+                { position: [0, 0, 0], width: 0.16, height: 0 },
+                { position: [0, 0, 0], width: 0.21, height: 0.125 },
+                { position: [0, 0, 0], width: 0.21, height: 0.125 },
+                { position: [0, 0, 0], width: 0.16, height: 0.125 },
+                { position: [0, 0, 0], width: 0.06, height: 0.06 },
+                { position: [0, 0, 0], width: 0.06, height: 0.06 },
+                { position: [0, 0, 0], width: 0.11, height: 0.06 },
             ]);
         }
 
@@ -147,7 +147,7 @@ export default function Selection() {
                                         return (
                                             <group key={index} position={[x, 0, z]}>
                                                 <mesh onClick={() => { router.navigate('/src/screens/Editor'); }}>
-                                                    <Myvase slices={slices2} texture={5} hover={2} />
+                                                    <Myvase slices={slices2} texture={6} hover={2} />
                                                     <Myvase slices={slices3} texture={1} materialmode={2} hover={2} />
                                                 </mesh>
                                             </group>

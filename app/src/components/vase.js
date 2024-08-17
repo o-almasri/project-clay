@@ -54,6 +54,11 @@ class Vase {
                 path = '/Textures/sand/sand.jpg'
                 break;
 
+            case 6:
+                // path = '/Textures/check.jpg';
+                path = '/Textures/sand/sand2.jpg'
+                break;
+
             default:
                 // Optionally, handle cases where num doesn't match 1, 2, 3, or 4.
                 break;
@@ -85,7 +90,9 @@ class Vase {
                     this.meshRef.current.rotation.z = 0.1;
                     this.meshRef.current.rotation.y -= 0.002;
                     this.meshRef.current.position.y = this.oscillate(-0.4, -0.3, 1, clock.getElapsedTime());
-                } else { }
+                } else {
+
+                }
 
 
                 //this.meshRef.current.position.x = -1;
@@ -656,7 +663,7 @@ class Vase {
             return (
                 <mesh ref={this.meshRef} geometry={geometry} castShadow >
 
-                    <MeshTransmissionMaterial thickness={0.2} side={DoubleSide} />
+                    <MeshTransmissionMaterial thickness={0.08} side={DoubleSide} />
 
                 </mesh>
 
