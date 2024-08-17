@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     //zIndex: -1, // Place canvas behind the overlay
-
+    touchAction: 'none',
   },
   //Card page wide container
   cardContainer: {

@@ -47,11 +47,19 @@ export default function Editor() {
 
     const canvasRef = useRef(null);
     const [slices, setSlices] = useState([]);
-    const { width, height, Texture } = useControls({
 
+    const [Xvalue, setXValue] = useState(0.05); // Initial value (adjust as needed)
+    const [minXValue, setMinXValue] = useState(0.05);
+    const [maxXValue, setMaxXValue] = useState(0.8);
+
+    const [Yvalue, setYValue] = useState(0.05); // Initial value (adjust as needed)
+    const [minYValue, setMinYValue] = useState(0.01);
+    const [maxYValue, setMaxYValue] = useState(0.3);
+
+
+    const { width, height, Texture, Camera_Y, Camera_Z } = useControls({
         width: { value: 0.5, min: 0.05, max: 0.8 },
         height: { value: 0.125, min: 0.01, max: 0.3 },
-
         Load_Preset: button(() => {
             loadpreset();
         }),
@@ -60,11 +68,40 @@ export default function Editor() {
         }),
 
         Texture: { value: 1, min: 1, max: 3, step: 1 },
+
+
+        Camera_Y: {
+            value: 1,
+            min: 0,  // Different minimum values for y and z
+            max: 2,
+            step: 0.1
+        },
+
+        Camera_Z: {
+            value: 5,
+            min: 3,  // Different minimum values for y and z
+            max: 10,
+            step: 0.1
+        },
         GoToCheckout: button(() => {
             randomize();
         }),
     });
 
+    const bind = useGesture({
+        onDrag: ({ offset: [x, y] }) => {
+            const normalizedX = normalizeDragX(x, 50); // Get normalized drag value
+            const newValue = minXValue + (maxXValue - minXValue) * (normalizedX + 1) / 2; // Map to your value range
+            setXValue(newValue); // Update the state
+
+
+            const normalizedY = normalizeDragX(-y, 50); // Get normalized drag value
+            const newYValue = minYValue + (maxYValue - minYValue) * (normalizedY + 1) / 2; // Map to your value range
+            setYValue(newYValue); // Update the state
+
+            //console.log('Val' + newYValue)
+        }
+    });
 
     useEffect(() => {
 
@@ -75,9 +112,25 @@ export default function Editor() {
             addSlice();
         }
 
-    }, [width, height,]);
+    }, [width, height]);
+    useEffect(() => {
+        removeSlice();
+        addSlice2();
 
+    }, [Xvalue, Yvalue]);
 
+    function normalizeDragX(x, maxXOffset) {
+        // Ensure maxXOffset is positive and non-zero to avoid division by zero
+        if (maxXOffset <= 0) {
+            throw new Error("maxXOffset must be a positive number");
+        }
+
+        // Normalize x to the range -1 to 1
+        const normalizedX = (2 * x) / maxXOffset - 1;
+
+        // Clamp the value to ensure it stays within the desired range
+        return Math.max(-1, Math.min(1, normalizedX));
+    }
 
 
     const addSlice = () => {
@@ -103,7 +156,34 @@ export default function Editor() {
                 ]);
             }
 
-        console.log(slices.length + "slices");
+        //console.log(slices.length + "slices");
+    };
+
+
+    const addSlice2 = () => {
+
+        if (slices.length <= 1) {
+            setSlices(() => [
+                { position: [0, 0, 0], width: 0, height: 0 },
+                { position: [0, 0, 0], width: width, height: 0 },
+            ]);
+        } else
+            if (slices.length < 11) {
+                setSlices(prevSlices => [
+                    ...prevSlices,
+                    { position: [0, 0, 0], width: Xvalue, height: Yvalue }
+
+                ]);
+            } else if (slices.length == 11) {
+                setSlices(prevSlices => prevSlices.slice(0, -1));
+                setSlices(prevSlices => [
+                    ...prevSlices,
+                    { position: [0, 0, 0], width: Xvalue, height: Yvalue }
+
+                ]);
+            }
+
+        //  console.log(slices.length + "slices");
     };
 
     const removeSlice = () => {
@@ -200,17 +280,19 @@ export default function Editor() {
             <NavMenu />
             <Button title="Add Slice" onPress={addSlice} />
             <Button title="Remove Slice" color={colors.orange} onPress={removeSlice} />
-            <Button title="Randomise" color={colors.teal} onPress={randomize} />
-            <Button title="Load Defaults" color={colors.teal} onPress={loadpreset} />
+            {/* <Button title="Randomise" color={colors.teal} onPress={randomize} /> */}
+            {/* <Button title="Load Defaults" color={colors.teal} onPress={loadpreset} /> */}
             <View style={[styles.Center, { width: '100vw', height: '100vh' }]}>
-                <View style={[{ width: '100%', height: '100%' }]}>
+                <View style={[{ width: '100%', height: '100%', }]}>
                     <Canvas style={styles.canvas} ref={canvasRef} shadows >
-                        <OrbitControls />
+                        {/* <OrbitControls /> */}
+
                         <PerspectiveCamera
 
                             fov={50}
-                            position={[0, 0.5, 6]} // Set the camera's position
-                            rotation={[-0.2, 0, 0]} // Set the camera's rotation
+                            //position={[0, 1, 5]} // Set the camera's position
+                            position={[0, Camera_Y, Camera_Z]}
+                            rotation={[-0.26, 0, 0]} // Set the camera's rotation
                             near={0.1} // Set the near clipping plane
                             far={1000} // Set the far clipping plane
                             makeDefault
@@ -231,9 +313,13 @@ export default function Editor() {
                         >
                             {/*<CustomVase/>*/}
 
-
                         </PresentationControls>
-                        <Myvase slices={slices} />
+                        <group>
+                            <mesh {...bind()}>
+                                <Myvase slices={slices} />
+                            </mesh>
+                        </group>
+
 
                         <Shadows />
                         <Ground />
@@ -306,7 +392,7 @@ function Ground() {
     return (
         <>
             {/* Ground Plane */}
-            <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[10, 10]} />
                 {/* <meshStandardMaterial color={colors.teal} /> */}
                 <shadowMaterial transparent opacity={0.4} />
