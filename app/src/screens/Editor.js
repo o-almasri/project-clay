@@ -385,6 +385,7 @@ function Myvase({ slices }) {
 
 
     vase.setTextureindex(GlazeFinish.value);
+    vase.sethovermode(1);
     vase.render();
 
     return vase.getMesh2();

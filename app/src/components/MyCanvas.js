@@ -40,7 +40,7 @@ function MyCamera() {
     <PerspectiveCamera
 
       fov={50}
-      position={[-0.5, 0.5, 3]} // Set the camera's position
+      position={[1, 0.8, 3]} // Set the camera's position
       rotation={[-0.2, 0, 0]} // Set the camera's rotation
       near={0.1} // Set the near clipping plane
       far={1000} // Set the far clipping plane
@@ -59,7 +59,7 @@ function MyCamera() {
       {/* <Thingy /> */}
     </PresentationControls>
 
-    <OrbitControls />
+    {/* <OrbitControls /> */}
     {/* <BoxObj /> */}
     {/* <axesHelper args={[5]} /> */}
     {/* <Model /> */}
@@ -215,20 +215,20 @@ function Thingy() {
 
 
   //vase
-  vase.addSlice([0, 0, 0], 0, 0);
-  vase.addSlice([0, 0, 0], 0.8, 0);
-  vase.addSlice([0, 0, 0], 1, 0.5);
-  vase.addSlice([0, 0, 0], 0.8, 0.25);
-  vase.addSlice([0, 0, 0], 0.25, 0.25);
-  vase.addSlice([0, 0, 0], 0.5, 0.25);
+  // vase.addSlice([0, 0, 0], 0, 0);
+  // vase.addSlice([0, 0, 0], 0.8, 0);
+  // vase.addSlice([0, 0, 0], 1, 0.5);
+  // vase.addSlice([0, 0, 0], 0.8, 0.25);
+  // vase.addSlice([0, 0, 0], 0.25, 0.25);
+  // vase.addSlice([0, 0, 0], 0.5, 0.25);
 
   //good vase
-  // vase.addSlice([0, 0, 0], 0, 0);
-  // vase.addSlice([0, 0, 0], 0.25, 0);
-  // vase.addSlice([0, 0, 0], 0.5, 0.75);
-  // vase.addSlice([0, 0, 0], 0.4, 0.125);
-  // vase.addSlice([0, 0, 0], 0.125, 0.125);
-  // vase.addSlice([0, 0, 0], 0.25, 0.125);
+  vase.addSlice([0, 0, 0], 0, 0);
+  vase.addSlice([0, 0, 0], 0.25, 0);
+  vase.addSlice([0, 0, 0], 0.5, 0.75);
+  vase.addSlice([0, 0, 0], 0.4, 0.125);
+  vase.addSlice([0, 0, 0], 0.125, 0.125);
+  vase.addSlice([0, 0, 0], 0.25, 0.125);
 
 
   //plate positin radius height
@@ -237,12 +237,21 @@ function Thingy() {
   // vase.addSlice(pos, 0.5, 0.02);
   // vase.addSlice(pos, 0.48, -0.01);
 
+  //sand vase
+  // vase.addSlice([0, 0, 0], 0, 0);
+  // vase.addSlice([0, 0, 0], 0.15, 0);
+  // vase.addSlice([0, 0, 0], 0.2, 0.125);
+  // vase.addSlice([0, 0, 0], 0.2, 0.125);
+  // vase.addSlice([0, 0, 0], 0.15, 0.125);
+  // vase.addSlice([0, 0, 0], 0.05, 0.06);
+  // vase.addSlice([0, 0, 0], 0.05, 0.06);
+  // vase.addSlice([0, 0, 0], 0.1, 0.06);
 
 
 
 
 
-
+  vase.sethovermode(2);
   vase.render();
   let offset = [-1, 0.1, 0];
   // vase.MOve(offset)

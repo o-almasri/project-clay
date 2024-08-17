@@ -35,12 +35,72 @@ import { easing } from 'maath'
 import { router } from 'expo-router';
 import NavMenu from "../components/navMenu";
 import Footer from "../components/Footer";
+import Vase from "../components/vase";
+
 export default function Selection() {
     const canvasRef = useRef(null);
-
+    const [slices, setSlices] = useState([]);
+    const [slices2, setSlices2] = useState([]);
+    const [slices3, setSlices3] = useState([]);
     const numCubes = 3; // Number of cubes
     const radius = 1.5; // Radius of the circle
 
+
+    const loadpreset = (num) => {
+        if (num == 1) {
+            setSlices(() => [
+                { position: [0, 0, 0], width: 0, height: 0 },
+                { position: [0, 0, 0], width: 0.25, height: 0 },
+                { position: [0, 0, 0], width: 0.27, height: 0.125 },
+                { position: [0, 0, 0], width: 0.35, height: 0.125 },
+                { position: [0, 0, 0], width: 0.43, height: 0.125 },
+                { position: [0, 0, 0], width: 0.51, height: 0.125 },
+                { position: [0, 0, 0], width: 0.59, height: 0.125 },
+                { position: [0, 0, 0], width: 0.60, height: 0.125 },
+                { position: [0, 0, 0], width: 0.4, height: 0.125 },
+                { position: [0, 0, 0], width: 0.125, height: 0.125 },
+                { position: [0, 0, 0], width: 0.25, height: 0.125 },
+            ]);
+        } else {
+            // vase.addSlice([0, 0, 0], 0, 0);
+            // vase.addSlice([0, 0, 0], 0.15, 0);
+            // vase.addSlice([0, 0, 0], 0.2, 0.125);
+            // vase.addSlice([0, 0, 0], 0.2, 0.125);
+            // vase.addSlice([0, 0, 0], 0.15, 0.125);
+            // vase.addSlice([0, 0, 0], 0.05, 0.06);
+            // vase.addSlice([0, 0, 0], 0.05, 0.06);
+            // vase.addSlice([0, 0, 0], 0.1, 0.06);
+
+            setSlices2(() => [
+                { position: [0, 0, 0], width: 0, height: 0 },
+                { position: [0, 0, 0], width: 0.15, height: 0 },
+                { position: [0, 0, 0], width: 0.2, height: 0.125 },
+                { position: [0, 0, 0], width: 0.2, height: 0.125 },
+                { position: [0, 0, 0], width: 0.15, height: 0.125 },
+                { position: [0, 0, 0], width: 0.05, height: 0.06 },
+                { position: [0, 0, 0], width: 0.05, height: 0.06 },
+                { position: [0, 0, 0], width: 0.1, height: 0.06 },
+
+            ]);
+
+            setSlices3(() => [
+                { position: [0, 0, 0], width: 0, height: 0 },
+                { position: [0, 0, 0], width: 0.2, height: 0 },
+                { position: [0, 0, 0], width: 0.25, height: 0.125 },
+                { position: [0, 0, 0], width: 0.25, height: 0.125 },
+                { position: [0, 0, 0], width: 0.2, height: 0.125 },
+                { position: [0, 0, 0], width: 0.1, height: 0.06 },
+                { position: [0, 0, 0], width: 0.1, height: 0.06 },
+                { position: [0, 0, 0], width: 0.15, height: 0.06 },
+            ]);
+        }
+
+    }
+
+    useEffect(() => {
+        loadpreset(1);
+        loadpreset(2);
+    }, []);
     return (
 
 
@@ -72,11 +132,26 @@ export default function Selection() {
                                     const x = radius * Math.cos(angle);
                                     const z = radius * Math.sin(angle);
                                     if (index == 0) {
-                                        return <Cube2 key={index} position={[x, 0, z]} />;
+                                        return (
+                                            <group key={index} position={[x, 0, z]}>
+                                                <mesh onClick={() => { router.navigate('/src/screens/Editor'); }}>
+                                                    <Myvase slices={slices} texture={1} hover={2} />
+                                                </mesh>
+                                            </group>
+                                        )
+
+
                                     } else if (index == 1) {
                                         return <Cube2 key={index} position={[x, 0, z]} />;
                                     } else if (index == 2) {
-                                        return <Cube2 key={index} position={[x, 0, z]} />;
+                                        return (
+                                            <group key={index} position={[x, 0, z]}>
+                                                <mesh onClick={() => { router.navigate('/src/screens/Editor'); }}>
+                                                    <Myvase slices={slices2} texture={5} hover={2} />
+                                                    <Myvase slices={slices3} texture={1} materialmode={2} hover={2} />
+                                                </mesh>
+                                            </group>
+                                        )
                                     } else {
                                         return <Dodecahedron key={index} position={[x, 0, z]} />;
                                     }
@@ -88,7 +163,7 @@ export default function Selection() {
 
                         </ScrollControls>
 
-
+                        {/* <OrbitControls /> */}
                         <Environment preset="warehouse" background backgroundBlurriness={0.5} />
                     </Canvas>
                 </View>
@@ -123,7 +198,7 @@ function Rig(props) {
             const direction = new THREE.Vector3().subVectors(cameraPositionInGroupSpace, child.position).normalize();
 
             // Calculate the quaternion for the rotation needed to face the camera
-            const targetQuaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+            const targetQuaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 1), direction);
 
             // Smoothly rotate the child towards the camera
             child.quaternion.slerp(targetQuaternion, 0.1); // Adjust 0.1 for rotation speed
@@ -138,8 +213,37 @@ function Rig(props) {
 }
 
 
+function Myvase({ slices, texture, materialmode = 1, hover = 1 }) {
 
 
+    if (!texture) {
+        texture = 1;
+    }
+    let pos = [0, 0, 0];
+    const vase = new Vase(pos, 128, []);
+    vase.addSlice(pos, 0, 0);
+    //loadpreset();
+    // Add slices based on the state
+    if (slices && slices.length > 0)
+        slices.forEach(slice => {
+            // console.log(slice)
+            vase.addSlice([0, 0, 0], slice.width, slice.height);
+        });
+    // vase.addSlice(pos, 0, 0);
+    // vase.addSlice(pos, 0.08, 0);
+    // vase.addSlice(pos, 0.1, 0.04);
+    // vase.addSlice(pos, 0.08, 0.06);
+    // vase.addSlice(pos, 0.025, 0.03);
+    // vase.addSlice(pos, 0.05, 0.03);
+
+    vase.setTextureindex(texture);
+    vase.setmeterialindex(materialmode);
+    vase.sethovermode(hover);
+    // vase.MOve([position[0], 0, position[2]]);
+    vase.render();
+
+    return vase.getMesh2();
+}
 
 
 function Cube({ position }) {
@@ -162,6 +266,9 @@ function Cube({ position }) {
         </mesh>
     )
 }
+
+
+
 
 function Cube2(props, { position }) {
     const meshRef = useRef();

@@ -26,6 +26,8 @@ class Vase {
         this.meshRef = createRef();
 
         this.currentTexturePath = '/Textures/Clay002_1K-JPG_Color.jpg';
+        this.mode = 1;
+        this.material = 1;
     }
 
 
@@ -47,12 +49,26 @@ class Vase {
                 // path = '/Textures/check.jpg';
                 path = '/Textures/rooftop_0007_color_1k.jpg'
                 break;
+            case 5:
+                // path = '/Textures/check.jpg';
+                path = '/Textures/sand/sand.jpg'
+                break;
 
             default:
                 // Optionally, handle cases where num doesn't match 1, 2, 3, or 4.
                 break;
         }
         this.currentTexturePath = path;
+    };
+
+    setmeterialindex = (num) => {
+        this.material = num;
+    };
+
+
+
+    sethovermode = (num) => {
+        this.mode = num;
     };
 
     render() {
@@ -62,7 +78,15 @@ class Vase {
             //  this.meshRef.current.rotation.z = 0.1;
 
             if (this.meshRef.current) { // Always check for existence
-                this.meshRef.current.rotation.y -= 0.01;
+
+                if (this.mode == 1) {
+                    this.meshRef.current.rotation.y -= 0.01;
+                } if (this.mode == 2) {
+                    this.meshRef.current.rotation.z = 0.1;
+                    this.meshRef.current.rotation.y -= 0.002;
+                    this.meshRef.current.position.y = this.oscillate(-0.4, -0.3, 1, clock.getElapsedTime());
+                } else { }
+
 
                 //this.meshRef.current.position.x = -1;
                 // this.meshRef.current.position.y = this.oscillate(-0.4, -0.3, 1, clock.getElapsedTime()); // Sine
@@ -104,6 +128,7 @@ class Vase {
             this.meshRef.current.position.y += position[1];
             this.meshRef.current.position.z += position[2];
         }
+        console.log(`move has been called ${position}`)
     }
 
 
@@ -378,6 +403,9 @@ class Vase {
     }
 
 
+
+
+
     //get obj where it returns R3F mesh
 
     getMesh() {
@@ -510,6 +538,7 @@ class Vase {
 
 
                     </bufferGeometry>
+
                     <meshStandardMaterial
                         attach="material"
                         map={objtexture.map}
@@ -597,36 +626,85 @@ class Vase {
         // objtexture.map.magFilter = THREE.LinearFilter;
         // objtexture.map.minFilter = THREE.LinearMipmapLinearFilter;
 
-        return (
-            <mesh ref={this.meshRef} geometry={geometry} castShadow >
 
-                <meshStandardMaterial
-                    attach="material"
-                    map={objtexture.map}
-                    normalMap={objtexture.normalMap}
-                    roughnessMap={objtexture.roughnessMap}
-                    aoMap={objtexture.aoMap}
-                    color={0xffffff}
-                    roughness={5}//0.5
-                    metalness={0.5}//0.5
-                    side={DoubleSide}
-                    // wireframe={true}          // Enable wireframe mode
-                    // wireframeLinewidth={4}
-                    transparent={true}
-                    opacity={1}
-                />
-                {/* <MeshTransmissionMaterial map={objtexture.map} backside thickness={0.2} side={DoubleSide}
-                    anisotropicBlur={0} chromaticAberration={0} clearcoat={0}
-                    transparent={true}
-                    opacity={1}
-                /> */}
+        if (this.material == 1) {
+            return (
+                <mesh ref={this.meshRef} geometry={geometry} castShadow >
 
-                {/* <MeshTransmissionMaterial thickness={0.2} side={DoubleSide} /> */}
+                    <meshStandardMaterial
+                        attach="material"
+                        map={objtexture.map}
+                        normalMap={objtexture.normalMap}
+                        roughnessMap={objtexture.roughnessMap}
+                        aoMap={objtexture.aoMap}
+                        color={0xffffff}
+                        roughness={5}//0.5
+                        metalness={0.5}//0.5
+                        side={DoubleSide}
+                        // wireframe={true}          // Enable wireframe mode
+                        // wireframeLinewidth={4}
+                        transparent={true}
+                        opacity={1}
+                    />
 
 
-            </mesh>
 
-        );
+                </mesh>
+
+            );
+        } else if (this.material == 2) {
+            return (
+                <mesh ref={this.meshRef} geometry={geometry} castShadow >
+
+                    <MeshTransmissionMaterial thickness={0.2} side={DoubleSide} />
+
+                </mesh>
+
+            );
+        } else if (this.material == 3) {
+            return (
+                <mesh ref={this.meshRef} geometry={geometry} castShadow >
+
+                    <MeshTransmissionMaterial map={objtexture.map} backside thickness={0.2} side={DoubleSide}
+                        anisotropicBlur={0} chromaticAberration={0} clearcoat={0}
+                        transparent={true}
+                        opacity={1}
+                    />
+
+                </mesh>
+            );
+        } else
+            return (
+                <mesh ref={this.meshRef} geometry={geometry} castShadow >
+
+
+                    <meshStandardMaterial
+                        attach="material"
+                        map={objtexture.map}
+                        normalMap={objtexture.normalMap}
+                        roughnessMap={objtexture.roughnessMap}
+                        aoMap={objtexture.aoMap}
+                        color={0xffffff}
+                        roughness={5}//0.5
+                        metalness={0.5}//0.5
+                        side={DoubleSide}
+                        // wireframe={true}          // Enable wireframe mode
+                        // wireframeLinewidth={4}
+                        transparent={true}
+                        opacity={1}
+                    />
+                    {/* <MeshTransmissionMaterial map={objtexture.map} backside thickness={0.2} side={DoubleSide}
+                        anisotropicBlur={0} chromaticAberration={0} clearcoat={0}
+                        transparent={true}
+                        opacity={1}
+                    /> */}
+
+                    {/* <MeshTransmissionMaterial thickness={0.2} side={DoubleSide} /> */}
+
+
+                </mesh>
+
+            );
     }
 
     getRekt() {
