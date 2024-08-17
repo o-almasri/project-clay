@@ -71,27 +71,29 @@ export default function Selection() {
             // vase.addSlice([0, 0, 0], 0.05, 0.06);
             // vase.addSlice([0, 0, 0], 0.1, 0.06);
 
+            //add scale variable to 1.5x scale them for viewing purposes 
+            let scale = 1.5;
             setSlices2(() => [
-                { position: [0, 0, 0], width: 0, height: 0 },
-                { position: [0, 0, 0], width: 0.15, height: 0 },
-                { position: [0, 0, 0], width: 0.2, height: 0.125 },
-                { position: [0, 0, 0], width: 0.2, height: 0.125 },
-                { position: [0, 0, 0], width: 0.15, height: 0.125 },
-                { position: [0, 0, 0], width: 0.05, height: 0.06 },
-                { position: [0, 0, 0], width: 0.05, height: 0.06 },
-                { position: [0, 0, 0], width: 0.1, height: 0.06 },
+                { position: [0, 0, 0], width: 0 * scale, height: 0 * scale },
+                { position: [0, 0, 0], width: 0.15 * scale, height: 0 * scale },
+                { position: [0, 0, 0], width: 0.2 * scale, height: 0.125 * scale },
+                { position: [0, 0, 0], width: 0.2 * scale, height: 0.125 * scale },
+                { position: [0, 0, 0], width: 0.15 * scale, height: 0.125 * scale },
+                { position: [0, 0, 0], width: 0.05 * scale, height: 0.06 * scale },
+                { position: [0, 0, 0], width: 0.05 * scale, height: 0.06 * scale },
+                { position: [0, 0, 0], width: 0.1 * scale, height: 0.06 * scale },
 
             ]);
 
             setSlices3(() => [
-                { position: [0, 0, 0], width: 0, height: 0 },
-                { position: [0, 0, 0], width: 0.16, height: 0 },
-                { position: [0, 0, 0], width: 0.21, height: 0.125 },
-                { position: [0, 0, 0], width: 0.21, height: 0.125 },
-                { position: [0, 0, 0], width: 0.16, height: 0.125 },
-                { position: [0, 0, 0], width: 0.06, height: 0.06 },
-                { position: [0, 0, 0], width: 0.06, height: 0.06 },
-                { position: [0, 0, 0], width: 0.11, height: 0.06 },
+                { position: [0, 0, 0], width: 0 * scale, height: 0 * scale },
+                { position: [0, 0, 0], width: 0.16 * scale, height: 0 * scale },
+                { position: [0, 0, 0], width: 0.21 * scale, height: 0.125 * scale },
+                { position: [0, 0, 0], width: 0.21 * scale, height: 0.125 * scale },
+                { position: [0, 0, 0], width: 0.16 * scale, height: 0.125 * scale },
+                { position: [0, 0, 0], width: 0.06 * scale, height: 0.06 * scale },
+                { position: [0, 0, 0], width: 0.06 * scale, height: 0.06 * scale },
+                { position: [0, 0, 0], width: 0.11 * scale, height: 0.06 * scale },
             ]);
         }
 
