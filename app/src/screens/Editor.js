@@ -57,7 +57,7 @@ export default function Editor() {
     const [maxYValue, setMaxYValue] = useState(0.3);
 
 
-    const { width, height, Texture, Camera_Y, Camera_Z } = useControls({
+    const { width, height, GlazeFinish, Camera_Y, Camera_Z } = useControls({
         width: { value: 0.5, min: 0.05, max: 0.8 },
         height: { value: 0.125, min: 0.01, max: 0.3 },
         Load_Preset: button(() => {
@@ -67,7 +67,7 @@ export default function Editor() {
             randomize();
         }),
 
-        Texture: { value: 1, min: 1, max: 3, step: 1 },
+        GlazeFinish: { value: 1, min: 1, max: 4, step: 1 },
 
 
         Camera_Y: {
@@ -90,7 +90,7 @@ export default function Editor() {
 
     const bind = useGesture({
         onDrag: ({ offset: [x, y] }) => {
-            const normalizedX = normalizeDragX(x, 50); // Get normalized drag value
+            const normalizedX = normalizeDragX(x, 100); // Get normalized drag value
             const newValue = minXValue + (maxXValue - minXValue) * (normalizedX + 1) / 2; // Map to your value range
             setXValue(newValue); // Update the state
 
@@ -383,6 +383,8 @@ function Myvase({ slices }) {
             vase.addSlice([0, 0, 0], slice.width, slice.height);
         });
 
+
+    vase.setTextureindex(GlazeFinish.value);
     vase.render();
 
     return vase.getMesh2();

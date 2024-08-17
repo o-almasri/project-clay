@@ -25,28 +25,38 @@ class Vase {
         this.UVs = []
         this.meshRef = createRef();
 
-        this.state = {
-            currentTexture: null
-        };
+        this.currentTexturePath = '/Textures/Clay002_1K-JPG_Color.jpg';
     }
 
 
-    componentDidMount() {
-        // Set the initial texture after the component mounts
-        this.setState({ currentTexture: this.texture });
-    }
+    setTextureindex = (num) => {
+        let path = '/Textures/Clay002_1K-JPG_Color.jpg';
+        let num1 = parseInt(num);
+        // the effing switch statment only compares numbers 
+        switch (num1) {
+            case 1:
+                path = '/Textures/Clay002_1K-JPG_Color.jpg';
+                break;
+            case 2:
+                path = '/Textures/512x512 Texel Density Texture 1.png';
+                break;
+            case 3:
+                path = '/Textures/Marble/marble_0008_color_1k.jpg';
+                break;
+            case 4:
+                // path = '/Textures/check.jpg';
+                path = '/Textures/rooftop_0007_color_1k.jpg'
+                break;
 
-    updateTexture(newTexture) {
-        this.setState({ currentTexture: newTexture });
-    }
-
-    NextTexture(num) {
-        this.setState({ currentTexture: newTexture });
-    }
-
+            default:
+                // Optionally, handle cases where num doesn't match 1, 2, 3, or 4.
+                break;
+        }
+        this.currentTexturePath = path;
+    };
 
     render() {
-
+        //const texture = useTexture(this.state.texturePath);
         // useFrame hook still works in class components
         useFrame(({ clock }) => {
             //  this.meshRef.current.rotation.z = 0.1;
@@ -65,6 +75,7 @@ class Vase {
         const amplitude = (max - min) / 2;
         return mid + amplitude * Math.sin(frequency * time);
     }
+
 
     //TODO::add a function to adjust slice radius and position and recalculate vertices
 
@@ -543,15 +554,18 @@ class Vase {
         //console.log(`vertices ${verticesArray.length} indices ${indicesArray.length} uvs ${uvsArray} uvs ${objectnormalsArray.length}`);
 
         // Texture
+
         const objtexture = useTexture(
             {
-                //map: 'Textures/Clay002_1K-JPG_Color.jpg',
-                map: '/Textures/Clay002_1K-JPG_Color.jpg',
-                //map: 'Textures/512x512 Texel Density Texture 1.png',
-                //map: 'Textures/Marble/marble_0008_color_1k.jpg',
-                // map: 'Textures/4096x4096 Texel Density Texture 5.png',
-                //map: 'Textures/check.jpg',
-                //map: 'Textures/Marble/marble_0008_color_1k.jpg',
+
+                map: this.currentTexturePath,  // Use the class property
+                //map: '/Textures/Clay002_1K-JPG_Color.jpg',
+                //map: '/Textures/Clay002_1K-JPG_Color.jpg',
+                //map: '/Textures/512x512 Texel Density Texture 1.png',
+                //map: '/Textures/Marble/marble_0008_color_1k.jpg',
+                // map: '/Textures/4096x4096 Texel Density Texture 5.png',
+                //map: '/Textures/check.jpg',
+                //map: '/Textures/Marble/marble_0008_color_1k.jpg',
                 //displacement map cause alot of weird issues 
                 //displacementMap: 'Textures/Clay002_1K-JPG_Displacement.jpg',
                 //normalMap: 'Textures/Clay002_1K-JPG_NormalGL.jpg',
