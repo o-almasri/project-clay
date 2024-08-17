@@ -90,7 +90,7 @@ export default function Editor() {
 
     const bind = useGesture({
         onDrag: ({ offset: [x, y] }) => {
-            const normalizedX = normalizeDragX(x, 100); // Get normalized drag value
+            const normalizedX = normalizeDragX(x, 500); // Get normalized drag value
             const newValue = minXValue + (maxXValue - minXValue) * (normalizedX + 1) / 2; // Map to your value range
             setXValue(newValue); // Update the state
 
