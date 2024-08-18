@@ -168,13 +168,13 @@ export default function Editor() {
                 { position: [0, 0, 0], width: width, height: 0 },
             ]);
         } else
-            if (slices.length < 11) {
+            if (slices.length < 12) {
                 setSlices(prevSlices => [
                     ...prevSlices,
                     { position: [0, 0, 0], width: Xvalue, height: Yvalue }
 
                 ]);
-            } else if (slices.length == 11) {
+            } else if (slices.length == 12) {
                 setSlices(prevSlices => prevSlices.slice(0, -1));
                 setSlices(prevSlices => [
                     ...prevSlices,
@@ -192,8 +192,9 @@ export default function Editor() {
 
     const randomize = () => {
         setSlices(() => [
+            { position: [0, 0, 0], width: 0, height: 0 },
             { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0 },
-            { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0 },
+            { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0.125 },
             { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0.125 },
             { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0.125 },
             { position: [0, 0, 0], width: Math.random() * 0.5 + 0.1, height: 0.125 },
@@ -216,7 +217,6 @@ export default function Editor() {
             { position: [0, 0, 0], width: 0.51, height: 0.125 },
             { position: [0, 0, 0], width: 0.59, height: 0.125 },
             { position: [0, 0, 0], width: 0.60, height: 0.125 },
-
             { position: [0, 0, 0], width: 0.4, height: 0.125 },
             { position: [0, 0, 0], width: 0.125, height: 0.125 },
             { position: [0, 0, 0], width: 0.25, height: 0.125 },

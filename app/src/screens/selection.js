@@ -21,9 +21,11 @@ import {
     PLYLoader
 
 } from "@react-three/drei";
+
+
 import { FontLoader } from 'three/src/loaders/TextureLoader';
 import { suspend } from 'suspend-react'
-import { View, Platform, ScrollView } from "react-native";
+import { View, Platform, ScrollView, Text } from "react-native";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import styles, { colors } from "../styles/styles";
 import { useRef, forwardRef, useState, useEffect } from 'react'
@@ -111,7 +113,10 @@ export default function Selection() {
         <>
 
             <NavMenu />
-            <View style={[styles.Center, { width: '100vw', height: '80vh' }]}>
+            <View style={[styles.guidecontainer]}>
+                <Text style={styles.footerText}>Select a template</Text>
+            </View >
+            <View style={[styles.Center, { width: '100vw', flex: 1 }]}>
                 <View style={[{ width: '100%', height: '100%' }]}>
                     <Canvas style={styles.canvas} ref={canvasRef} shadows >
                         <PerspectiveCamera

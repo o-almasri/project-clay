@@ -229,6 +229,16 @@ const styles = StyleSheet.create({
     //marginTop: 20,
 
   },
+
+  guidecontainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: colors.teal,
+    padding: 10,
+    //marginTop: 20,
+
+  },
   navItem: {
     padding: 10,
 

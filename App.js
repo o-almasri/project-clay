@@ -8,7 +8,7 @@ import Home from './app/src/screens/home';
 export default function App() {
 
 
-  // Open or create a database (synchronously)
+
 
   return (
 
