@@ -16,7 +16,9 @@ import {
     VertexNormalsHelper,
     useTexture, Text as DreiText,
     RenderTexture,
-    ScrollControls, useScroll
+    ScrollControls,
+    useScroll,
+    PLYLoader
 
 } from "@react-three/drei";
 import { FontLoader } from 'three/src/loaders/TextureLoader';
@@ -354,4 +356,7 @@ function Dodecahedron(props) {
         </group>
     )
 }
+
+
+
 

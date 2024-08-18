@@ -7,7 +7,7 @@ import MyCanvas from "../components/MyCanvas";
 export default function main() {
   return (
 
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <MyCanvas />
       <Form />
     </View>

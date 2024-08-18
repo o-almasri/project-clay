@@ -20,8 +20,8 @@ export const colors = {
   */
   // ... add more colors as needed
 };
-const fontScale = PixelRatio.getFontScale();
-const getFontSize = size => size / fontScale;
+
+
 const styles = StyleSheet.create({
   //entire page container
 
@@ -60,10 +60,12 @@ const styles = StyleSheet.create({
     padding: "1%",
     borderRadius: 20,
     pointerEvents: 'auto',
+
   },
   ScrollView: { width: "100%", alignItems: "center", },
   noScroll: {
     showsVerticalScrollIndicator: 'false',
+
   },
   input: {
     borderColor: colors.pinkish,
@@ -229,16 +231,17 @@ const styles = StyleSheet.create({
   },
   navItem: {
     padding: 10,
+
   },
   navText: {
-    fontSize: getFontSize(20),
+    fontSize: windowWidth <= 900 ? "3vw" : "1.5vw",
     textAlign: 'center',
     color: colors.orange,
     fontWeight: 'bold',
     padding: 10,
   },
   footerText: {
-    fontSize: getFontSize(25),
+    fontSize: windowWidth <= 900 ? "3vw" : "1vw",
     textAlign: 'center',
     color: colors.white,
     fontWeight: 'bold',
