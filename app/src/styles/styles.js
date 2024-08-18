@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: '10vw', // Adjust width as needed
-    height: '3.5vw',  // Adjust height as needed
+    width: windowWidth <= 900 ? "30vw" : "10vw",
+    height: windowWidth <= 900 ? "10vw" : "3.5vw",
   },
   margin_bottom: {
     marginBottom: 20,
