@@ -11,7 +11,10 @@ import CustomCard from "../components/CustomCard";
 import NavMenu from "../components/navMenu";
 import Footer from "../components/Footer";
 import { router } from 'expo-router';
+import { useState, useEffect } from 'react'
 const section = () => {
+
+
 
     return (
         // first section
@@ -68,8 +71,28 @@ const section = () => {
 }
 
 
+function getToken() {
+    return localStorage.getItem('authToken');
+}
 
+function logout() {
+    localStorage.removeItem('authToken');
+}
 export default function Home() {
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = getToken();
+        if (session === null) {
+            // Redirect to login page
+            setTimeout(() => {
+                router.navigate('');
+            }, 100); // Adjust the timeout as needed
+        } else {
+            setUserId(session)
+        }
+    }, [userId]);
+
     return (
         <View style={styles.container}>
             {section()}

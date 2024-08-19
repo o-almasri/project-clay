@@ -41,7 +41,9 @@ import EVase from "../components/EVase";
 import { button, useControls } from 'leva'
 
 
-
+function getToken() {
+    return localStorage.getItem('authToken');
+}
 
 export default function Editor() {
 
@@ -55,8 +57,19 @@ export default function Editor() {
     const [Yvalue, setYValue] = useState(0.05); // Initial value (adjust as needed)
     const [minYValue, setMinYValue] = useState(0.01);
     const [maxYValue, setMaxYValue] = useState(0.3);
-
-
+    const [userId, setUserId] = useState(null);
+    useEffect(() => {
+        const session = getToken();
+        if (session === null) {
+            // Redirect to login page
+            setTimeout(() => {
+                router.navigate('');
+            }, 100); // Adjust the timeout as needed
+        } else {
+            setUserId(session)
+            localStorage.removeItem('ordernumber');
+        }
+    }, [userId]);
     const { width, height, GlazeFinish, Camera_Y, Camera_Z } = useControls({
         width: { value: 0.5, min: 0.05, max: 0.8 },
         height: { value: 0.125, min: 0.01, max: 0.3 },
@@ -83,20 +96,29 @@ export default function Editor() {
             max: 10,
             step: 0.1
         },
-        GoToCheckout: button(() => {
-            randomize();
-        }),
+
     });
+
+    function saveobject() {
+        if (slices.length > 1) {
+
+            let jsonarray = { materialindex: 1, texture: GlazeFinish, data: slices };
+            // console.log(jsonarray);
+            localStorage.setItem('jsonarray', JSON.stringify(jsonarray));
+            router.navigate('src/screens/Checkout');
+        }
+
+    }
 
     const bind = useGesture({
         onDrag: ({ offset: [x, y] }) => {
             const normalizedX = normalizeDragX(x, 500); // Get normalized drag value
-            const newValue = minXValue + (maxXValue - minXValue) * (normalizedX + 1) / 2; // Map to your value range
+            const newValue = minXValue + (maxXValue - minXValue) * (normalizedX + 1) / 2;
             setXValue(newValue); // Update the state
 
 
-            const normalizedY = normalizeDragX(-y, 50); // Get normalized drag value
-            const newYValue = minYValue + (maxYValue - minYValue) * (normalizedY + 1) / 2; // Map to your value range
+            const normalizedY = normalizeDragX(-y, 500); // Get normalized drag value
+            const newYValue = minYValue + (maxYValue - minYValue) * (normalizedY + 1) / 2;
             setYValue(newYValue); // Update the state
 
             //console.log('Val' + newYValue)
@@ -187,7 +209,13 @@ export default function Editor() {
     };
 
     const removeSlice = () => {
-        setSlices(prevSlices => prevSlices.slice(0, -1));
+        if (slices.length == 2) {
+            setSlices(prevSlices => prevSlices.slice(0, -2));
+        } else {
+            setSlices(prevSlices => prevSlices.slice(0, -1));
+        }
+
+
     };
 
     const randomize = () => {
@@ -280,7 +308,7 @@ export default function Editor() {
             <NavMenu />
             <Button title="Add Slice" onPress={addSlice} />
             <Button title="Remove Slice" color={colors.orange} onPress={removeSlice} />
-            {/* <Button title="Randomise" color={colors.teal} onPress={randomize} /> */}
+            <Button title="Done" color={colors.teal} onPress={saveobject} />
             {/* <Button title="Load Defaults" color={colors.teal} onPress={loadpreset} /> */}
             <View style={[styles.Center, { width: '100vw', height: '100vh' }]}>
                 <View style={[{ width: '100%', height: '100%', }]}>
@@ -386,6 +414,7 @@ function Myvase({ slices }) {
 
     vase.setTextureindex(GlazeFinish.value);
     vase.sethovermode(1);
+    vase.setmeterialindex(1);
     vase.render();
 
     return vase.getMesh2();

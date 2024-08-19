@@ -41,6 +41,11 @@ import NavMenu from "../components/navMenu";
 import Footer from "../components/Footer";
 import Vase from "../components/vase";
 
+
+
+function getToken() {
+    return localStorage.getItem('authToken');
+}
 export default function Selection() {
     const canvasRef = useRef(null);
     const [slices, setSlices] = useState([]);
@@ -48,7 +53,19 @@ export default function Selection() {
     const [slices3, setSlices3] = useState([]);
     const numCubes = 3; // Number of cubes
     const radius = 1.5; // Radius of the circle
+    const [userId, setUserId] = useState(null);
 
+    useEffect(() => {
+        const session = getToken();
+        if (session === null) {
+            // Redirect to login page
+            setTimeout(() => {
+                router.navigate('');
+            }, 100); // Adjust the timeout as needed
+        } else {
+            setUserId(session)
+        }
+    }, [userId]);
 
     const loadpreset = (num) => {
         if (num == 1) {

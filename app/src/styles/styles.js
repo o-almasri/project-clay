@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: "2%",
     width: "95%",
-
   },
   buttonText: {
     color: colors.white,
@@ -122,6 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "95%",
     marginTop: "1%",
+    alignItems: 'center', // This line centers the children vertically
   },
   checkbox: {
     margin: "1%",
@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     padding: 10,
+    flexWrap: 'wrap'
   },
   footercontainer: {
     flexDirection: 'row',
@@ -237,14 +238,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.teal,
     padding: 10,
     //marginTop: 20,
-
   },
   navItem: {
     padding: 10,
 
   },
   navText: {
-    fontSize: windowWidth <= 900 ? "3vw" : "1.5vw",
+    fontSize: windowWidth <= 900 ? "3vw" : "1vw",
     textAlign: 'center',
     color: colors.orange,
     fontWeight: 'bold',
@@ -263,7 +263,64 @@ const styles = StyleSheet.create({
   },
   margin_bottom: {
     marginBottom: 20,
+  },
+  checkoutContainer: {
+    padding: 10,
+    margin: 1,
+    borderColor: colors.teal,
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  checkoutTitle: {
+    fontSize: 22, // Adjust font size as needed
+    fontWeight: "bold",
+    color: colors.black, // White text color
+    textAlign: "Left", // Center alignment
+  },
+  checkoutSubtitle: {
+    fontSize: 16, // Adjust font size as needed
+    color: colors.black, // White text color
+    textAlign: "Left", // Center alignment
+
+  },
+  checkoutSubtitleSelected: {
+    color: colors.white, // White text color
+    backgroundColor: colors.orange,
+    borderRadius: 20,
+    fontWeight: "bold",
+
+  },
+  checkoutrowcontainer: {
+    flexDirection: 'row', // Arrange items horizontally
+    justifyContent: 'center', // Distribute space evenly around items
+    alignItems: 'center', // Center items vertically (if needed)
+    paddingHorizontal: 15, // Optional: Add padding for better visual spacing
+    flexWrap: 'wrap',
+  },
+  checkoutsizecontainer: {
+    flexDirection: 'row', // Arrange items horizontally
+    justifyContent: 'space-between', // Distribute space evenly around items
+    alignItems: 'center', // Center items vertically (if needed)
+    paddingHorizontal: 15, // Optional: Add padding for better visual spacing
+    flexWrap: 'wrap',
+
+  },
+  checkoutsizeitem: {
+    padding: 10,
+    borderRadius: 10,
+  },
+
+  cbtn: {
+    backgroundColor: colors.teal,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: "2%",
   }
+
+
+
 });
 
 export default styles; // Default export

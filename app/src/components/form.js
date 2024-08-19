@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -12,6 +12,8 @@ import { TabView } from 'react-native-tab-view';
 
 import styles from "../styles/styles";
 import { router } from 'expo-router';
+import axios from 'axios';
+
 
 // Memoized UserNameInput component to prevent re-renders
 const UserNameInput = React.memo(({ value, onChangeText }) => {
@@ -77,7 +79,7 @@ const LoginScene = React.memo(({ name, setName, password, setPassword, errors, i
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
 
-      <Text style={styles.formText}>{isSelected ? "checked" : ""}{name}{password}</Text>
+      {/* <Text style={styles.formText}>{isSelected ? "checked" : ""}{name}{password}</Text> */}
     </View>
   );
 });
@@ -106,8 +108,8 @@ const AboutUsScene = React.memo(({ next }) => {
 });
 
 function Form() {
+  const viewRef = useRef(null);
   const [isSelected, setSelection] = useState(false);
-
   // State for login
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -130,13 +132,65 @@ function Form() {
     return Object.keys(errors).length === 0;
   };
 
+  function getToken() {
+    return localStorage.getItem('authToken');
+  }
+
+  function logout() {
+    localStorage.removeItem('authToken');
+  }
+
+  useEffect(() => {
+    const handleWheel = (event) => {
+      const deltaY = event.deltaY; // Get vertical scroll amount
+      if (deltaY > 0) {
+        setIndex(1);
+      } else if (deltaY <= 0) {
+        setIndex(0);
+      }
+    };
+    const canvas = viewRef.current;
+    canvas.addEventListener('wheel', handleWheel);
+    return () => {
+      canvas.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   const handleSubmit = () => {
+    //TODO:: set local storage and ondevice storage for different platforms web and ios/android
     if (validateForm()) {
-      console.log("Submitted", name, password);
+      //console.log("Submitted", name, password);
+      // const API_URL = 'http://localhost/glazeit/setup_tables.php';
+      // axios.get(API_URL)
+      //   .then(response => console.log(response.data))
+      //   .catch(error => console.error('Error:', error));
+
+
+      const data = {
+        name: name,
+        pass: password
+      };
+      axios.post('http://localhost/glazeit/get_user.php', data)
+        .then(response => {
+          console.log(response.data);
+          if (response.data == -1) {
+            logout();
+          } else {
+            localStorage.setItem('authToken', response.data);
+            router.navigate('/src/screens/home');
+          }
+
+        })
+        .catch(error => {
+          console.error("Error sending data: ", error);
+        });
+
       setName("");
       setPassword("");
       setErrors({});
-      router.navigate('/src/screens/home');
+      // router.navigate('/src/screens/home');
+      // console.log('token is ' + getToken());
+
     }
   };
 
@@ -165,10 +219,13 @@ function Form() {
     }
   };
 
+
+
+
   return (
     <View style={[styles.cardContainer]}>
       <View style={[styles.card, styles.shadow]}>
-        <ScrollView style={[styles.noScroll]}>
+        <ScrollView style={[styles.noScroll]} ref={viewRef}>
           <TabView
 
             tabBarPosition='bottom'

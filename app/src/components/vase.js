@@ -47,7 +47,7 @@ class Vase {
                 break;
             case 4:
                 // path = '/Textures/check.jpg';
-                path = '/Textures/rooftop_0007_color_1k.jpg'
+                path = '/Textures/check.jpg'
                 break;
             case 5:
                 // path = '/Textures/check.jpg';
@@ -59,11 +59,77 @@ class Vase {
                 path = '/Textures/sand/sand2.jpg'
                 break;
 
+            //fabric ones 
+            case 7:
+                // path = '/Textures/check.jpg';
+                path = '/Textures/fabric/fabric1.jpg'
+                break;
+            case 8:
+                // path = '/Textures/check.jpg';
+                path = '/Textures/fabric/fabric2.jpg'
+                break;
+            case 9:
+                // path = '/Textures/check.jpg';
+                path = '/Textures/fabric/fabric3.jpg'
+                break;
+
             default:
                 // Optionally, handle cases where num doesn't match 1, 2, 3, or 4.
                 break;
         }
         this.currentTexturePath = path;
+    };
+
+
+    getTextureName = (num) => {
+        let name = 'Royal Brown Clay';
+        let num1 = parseInt(num);
+        // the effing switch statment only compares numbers 
+        switch (num1) {
+            case 1:
+                // path = '/Textures/Clay002_1K-JPG_Color.jpg';
+                name = 'Royal Brown Clay';
+                break;
+            case 2:
+                // path = '/Textures/512x512 Texel Density Texture 1.png';
+                name = 'Colorful Clay';
+                break;
+            case 3:
+                // path = '/Textures/Marble/marble_0008_color_1k.jpg';
+                name = 'White Marble';
+                break;
+            case 4:
+                // path = '/Textures/check.jpg';
+                name = 'New Tone'
+                break;
+            case 5:
+                // path = '/Textures/sand/sand.jpg'
+                name = 'Sunny Side'
+                break;
+            case 6:
+                // path = '/Textures/sand/sand2.jpg'
+                name = 'Traditional'
+                break;
+
+            //fabric ones 
+            case 7:
+                // path = '/Textures/fabric/fabric1.jpg'
+                name = 'Fabric 1'
+                break;
+            case 8:
+                // path = '/Textures/fabric/fabric2.jpg'
+                name = 'Fabric 2'
+                break;
+            case 9:
+                // path = '/Textures/fabric/fabric3.jpg'
+                name = 'Fabric 3'
+                break;
+
+            default:
+                // Optionally, handle cases where num doesn't match 1, 2, 3, or 4.
+                break;
+        }
+        return name;
     };
 
     setmeterialindex = (num) => {
@@ -653,20 +719,14 @@ class Vase {
                         transparent={true}
                         opacity={1}
                     />
-
-
-
                 </mesh>
 
             );
         } else if (this.material == 2) {
             return (
                 <mesh ref={this.meshRef} geometry={geometry} castShadow >
-
                     <MeshTransmissionMaterial thickness={0.08} side={DoubleSide} />
-
                 </mesh>
-
             );
         } else if (this.material == 3) {
             return (

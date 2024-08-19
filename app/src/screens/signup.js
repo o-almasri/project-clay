@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Text,
     View,
@@ -16,11 +16,20 @@ import Select from 'react-select'
 
 import NavMenu from "../components/navMenu";
 import Footer from "../components/Footer";
-
+import axios from 'axios';
 
 
 
 function signupfunc() {
+    useEffect(() => {
+        setTimeout(() => {
+            getcountries();
+            setCountry(countryOptions[0]);
+        }, 100); // Adjust the timeout as needed
+
+    }, []);
+
+
 
     //for signup
     const [email, setEmail] = useState("");
@@ -28,18 +37,60 @@ function signupfunc() {
     const [newpassword2, setnewPassword2] = useState("");
     const [phone, setPhone] = useState("");
     const [street, setStreet] = useState("");
-    const [city, setCity] = useState("");
-    const [country, setCountry] = useState("");
+    const [city, setCity] = useState();
+
     const [errors, setErrors] = useState({});
     const [isSelected, setSelection] = useState(false);
 
+    const [countryOptions, setcountryOptions] = useState([]);
+
+    const [cityOptions, setcityOptions] = useState([]);
+
+    const [country, setCountry] = useState();
 
 
+    useEffect(() => {
+        setTimeout(() => {
+            if (country)
+                getcities();
+        }, 200); // Adjust the timeout as needed
 
+    }, [country]);
 
     const handlesignup = () => {
         if (validateInput()) {
-            console.log("New Record To Be Sent", email, newpassword, phone, street, city, country, isSelected);
+            //console.log("New Record To Be Sent", email, newpassword, phone, street, city.value, country.value, isSelected);
+            //TODO:: add data sanatization and regex
+
+            const data = {
+                email: email,
+                pass: newpassword,
+                phone: phone,
+                street: street,
+                city: city.value,
+            };
+            axios.post('http://localhost/glazeit/add_user.php', data)
+                .then(response => {
+                    // console.log(response.data);
+                    if (response.data == -1) {
+                        console.log(response.data);
+                        localStorage.removeItem('authToken');
+                    } else if (response.data == -2) {
+                        //user already exist
+
+                        setErrors({ userexist: 'User already Exist' })
+                        localStorage.removeItem('authToken');
+                    } else {
+                        //user added and login
+                        localStorage.setItem('authToken', response.data);
+                        router.navigate('/src/screens/home');
+                    }
+
+                })
+                .catch(error => {
+                    console.error("Error sending data: ", error);
+                });
+
             setEmail("");
             setnewPassword("");
             setnewPassword2("");
@@ -49,9 +100,54 @@ function signupfunc() {
             setCountry("");
             setErrors({});
 
-            router.navigate('');
+
+            //router.navigate('');
         }
     }
+
+    function getcountries() {
+
+        axios.post('http://localhost/glazeit/get_countries.php')
+            .then(response => {
+                //console.log(response.data);
+                let countries = [];
+                response.data.forEach(element => {
+                    countries.push({ value: element.id, label: element.name })
+                });
+
+                setcountryOptions(countries);
+                setCountry(countries[0]);
+            })
+            .catch(error => {
+                console.error("Error sending data: ", error);
+            });
+
+    }
+
+
+    function getcities() {
+        const data = {
+            id: country.value,
+        };
+        axios.post('http://localhost/glazeit/get_cities.php', data)
+            .then(response => {
+
+                //console.log(response.data);
+                let cities = [];
+                response.data.forEach(element => {
+                    cities.push({ value: element.id, label: element.name })
+                });
+
+                setcityOptions(cities);
+                setCity(cities[0]);
+            })
+            .catch(error => {
+                console.error("Error sending data: ", error);
+            });
+
+    }
+
+
 
 
     function setphonenumber(text) {
@@ -90,14 +186,6 @@ function signupfunc() {
         return isValid;
     };
 
-
-
-    const countryOptions = [
-        { value: 'CA', label: 'Canada' },
-        { value: 'JO', label: 'Jordan' },
-        { value: 'US', label: 'United States' }
-    ]
-
     const phoneOptions = [
         { value: 'CA', label: 'Canada (+1)' },
         { value: 'JO', label: 'Jordan (+962)' },
@@ -123,7 +211,7 @@ function signupfunc() {
         if (!street) errors.street = "Street is required"
         if (!city) errors.city = "City is required"
         if (!country) errors.country = "Country is required"
-
+        if (!isSelected) errors.checkbox = "you need to agree to terms and conditions"
         if (!validatePass()) {
             errors.passwordmismatch = "Password Mismatch"
         }
@@ -151,6 +239,7 @@ function signupfunc() {
             <View style={styles.formTextView}>
                 <Text style={styles.formText} >Email</Text>
                 {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+                {errors.userexist ? <Text style={styles.errorText}>{errors.userexist}</Text> : null}
             </View>
             <TextInput style={styles.input} value={email} onChangeText={setEmail} />
 
@@ -188,7 +277,7 @@ function signupfunc() {
 
 
             {/*TODO:: FIX STYling for this*/}
-            <Select
+            {/* <Select
                 styles={{
                     control: (baseStyles, state) => ({
                         ...baseStyles,
@@ -216,7 +305,7 @@ function signupfunc() {
                 name="PhoneOptions"
                 options={phoneOptions}
             //onChange={(selectedOption) => { setPhone(selectedOption.value ? selectedOption.value : "") }}
-            />
+            /> */}
 
 
             {/*street*/}
@@ -231,15 +320,7 @@ function signupfunc() {
                 <Text style={styles.formText}>city</Text>
                 {errors.city ? <Text style={styles.errorText}>{errors.city}</Text> : null}
             </View>
-            <TextInput style={styles.input} value={city} onChangeText={setCity} />
 
-            {/*country*/}
-            <View style={styles.formTextView}>
-                <Text style={styles.formText}>country</Text>
-                {errors.country ? <Text style={styles.errorText}>{errors.country}</Text> : null}
-            </View>
-            {/* <Select style={styles.input} options={countryOptions} /> */}
-            {/* <TextInput style={styles.input} value={country} onChangeText={setCountry} /> */}
             <Select
                 styles={{
                     control: (baseStyles, state) => ({
@@ -262,7 +343,43 @@ function signupfunc() {
                         },
                     }),
                 }}
-                // defaultValue={countryOptions[0]}
+                //defaultValue={countryOptions[0]}
+                isClearable={true}
+                isSearchable={true}
+                name="city"
+                options={cityOptions}
+                value={city}
+                onChange={(selectedOption) => { setCity(selectedOption ? selectedOption : "") }}
+            />
+            {/*country*/}
+            <View style={styles.formTextView}>
+                <Text style={styles.formText}>country</Text>
+                {errors.country ? <Text style={styles.errorText}>{errors.country}</Text> : null}
+            </View>
+            {/* <Select style={styles.input} options={countryOptions} /> */}
+            {/* <TextInput style={styles.input} value={country} onChangeText={setCountry} /> */}
+            <Select
+                styles={{
+                    control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: state.isFocused ? colors.teal : colors.pinkish,
+                        width: '95%',
+                        borderRadius: '10px',
+                    }),
+                    menu: (baseStyles) => ({  // <-- Add this section
+                        ...baseStyles,
+                        width: '95%',       // <-- Set your desired width here
+                    }),
+                    option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        backgroundColor: state.isFocused ? colors.teal : colors.white,
+                        color: colors.black,
+                        ':hover': {
+                            backgroundColor: colors.teal,
+                            color: colors.white,
+                        },
+                    }),
+                }}
                 isClearable={true}
                 isSearchable={true}
                 name="Country"
@@ -270,6 +387,7 @@ function signupfunc() {
                 value={country}
                 onChange={(selectedOption) => { setCountry(selectedOption ? selectedOption : "") }}
             />
+
             <View style={styles.checkboxContainer}>
                 <CheckBox
                     value={isSelected}
@@ -277,7 +395,7 @@ function signupfunc() {
                     style={styles.checkbox}
                 />
 
-                <Text style={[styles.subtitle, styles.nomargin]}>
+                <Text style={[styles.subtitle, { margin: 1 }]}>
                     I agree to{" "}
                     <Pressable onPress={() => {
                         //TODO:: Navigate to TermsAnd Conditions Page
@@ -287,12 +405,12 @@ function signupfunc() {
                 </Text>
 
             </View>
-
+            {errors.checkbox ? <Text style={styles.errorText}>{errors.checkbox}</Text> : null}
             <Pressable style={styles.btn} onPress={handlesignup}>
                 <Text style={styles.buttonText}>Create Account</Text>
             </Pressable>
 
-            <Text style={styles.formText}>{isSelected ? "checked" : ""}{"name"}{"password"}</Text>
+
 
         </View>
 
@@ -300,6 +418,11 @@ function signupfunc() {
 }
 
 export default function singup() {
+
+
+
+
+
     return (
         <>
 
@@ -316,6 +439,8 @@ export default function singup() {
         </>
     );
 }
+
+
 
 
 

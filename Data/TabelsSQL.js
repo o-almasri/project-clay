@@ -100,3 +100,16 @@ CREATE TABLE IF NOT EXISTS order_items (
   FOREIGN KEY (item_id) REFERENCES items(id)
 );
 `;
+
+
+export const OrderItemsNEW = `
+CREATE TABLE IF NOT EXISTS order_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  order_id INTEGER,
+  quantity INTEGER,
+  texture INTEGER,
+  type INTEGER,
+  data TEXT,
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+);
+`;

@@ -76,23 +76,23 @@ export default function MyCanvas() {
   const canvasRef = useRef(null);
 
 
-  useEffect(() => {
-    const handleWheel = (event) => {
-      const deltaY = event.deltaY; // Get vertical scroll amount
+  // useEffect(() => {
+  //   const handleWheel = (event) => {
+  //     const deltaY = event.deltaY; // Get vertical scroll amount
 
-      // Apply your desired effect based on deltaY
-      console.log("Wheel Scroll:", deltaY);
+  //     // Apply your desired effect based on deltaY
+  //      console.log("Wheel Scroll:", deltaY);
 
-    };
+  //   };
 
-    const canvas = canvasRef.current;
-    canvas.addEventListener('wheel', handleWheel);
+  //   const canvas = canvasRef.current;
+  //   canvas.addEventListener('wheel', handleWheel);
 
-    return () => {
-      canvas.removeEventListener('wheel', handleWheel);
+  //   return () => {
+  //     canvas.removeEventListener('wheel', handleWheel);
 
-    };
-  }, []);
+  //   };
+  // }, []);
 
 
 
@@ -250,12 +250,12 @@ function Thingy() {
 
 
 
-
+  vase.setTextureindex(1);
+  vase.setmeterialindex(1);
   vase.sethovermode(2);
   vase.render();
   let offset = [-1, 0.1, 0];
   // vase.MOve(offset)
-
 
 
   return (
