@@ -76,6 +76,7 @@ export default function Checkout() {
     const cameraRef = useRef();
     const [texture, settexture] = useState(0);
     const [textureName, settextureName] = useState(0);
+    const [res, setres] = useState(64);
     const [materialindex, setmeterialindex] = useState(1); // 1 or 2 or 3
     const [orderstatus, setorderstatus] = useState(0); // order number to disable options and make this behave like order tracking
     const shippingprice = 5;
@@ -98,6 +99,7 @@ export default function Checkout() {
         setSlices(obj.data);
         settexture(obj.texture);
         setmeterialindex(obj.materialindex);
+        setres(obj.res);
         let ordernumber = localStorage.getItem('ordernumber');
         if (ordernumber) {
             setorderstatus(ordernumber);
@@ -128,7 +130,7 @@ export default function Checkout() {
 
     function Myvase({ slices }) {
         let pos = [0, 0, 0];
-        const vase = new Vase(pos, 128, []);
+        const vase = new Vase(pos, res, []);
         vase.addSlice([0, 0, 0], 0, 0);
         // Add slices based on the state
         if (slices && slices.length > 0)
@@ -164,16 +166,17 @@ export default function Checkout() {
             quantity: quantity,
             texture: texture,
             size: radio * 5,
+            resolution: res,
             type: 1, // 1 for vase , 2 for sandvase , 3 for shirt
             data: JSON.stringify(slices), // parse data as JSON
         };
 
-        //console.log('data sent');
-        //console.log(data);
+        console.log('data sent');
+        console.log(data);
         axios.post('http://localhost/glazeit/order.php', data)
             .then(response => {
-                //console.log('response');
-                //console.log(response.data);
+                console.log('response');
+                console.log(response.data);
                 if (response.data == -1) {
                     console.log(response.data);
                 } else {

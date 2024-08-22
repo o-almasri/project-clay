@@ -38,7 +38,7 @@ import Footer from "../components/Footer";
 
 import Vase from "../components/vase";
 import EVase from "../components/EVase";
-import { button, useControls } from 'leva'
+import { button, useControls, toggle } from 'leva'
 
 
 function getToken() {
@@ -70,7 +70,7 @@ export default function Editor() {
             localStorage.removeItem('ordernumber');
         }
     }, [userId]);
-    const { width, height, GlazeFinish, Camera_Y, Camera_Z } = useControls({
+    const { width, height, GlazeFinish, Camera_Y, Camera_Z, Resolution, Rotating } = useControls({
         width: { value: 0.5, min: 0.05, max: 0.8 },
         height: { value: 0.125, min: 0.01, max: 0.3 },
         Load_Preset: button(() => {
@@ -96,13 +96,24 @@ export default function Editor() {
             max: 10,
             step: 0.1
         },
+        Resolution: {
+            value: 64,
+            min: 4,  // Different minimum values for y and z
+            max: 64,
+            step: 4
+        },
+        Rotating: true
 
     });
 
     function saveobject() {
         if (slices.length > 1) {
 
-            let jsonarray = { materialindex: 1, texture: GlazeFinish, data: slices };
+            //material index is obj type vase / sand vase / tshirt 
+            // texture is texture 
+            // data is slices data 
+            //resolution is how many points per circle
+            let jsonarray = { materialindex: 1, texture: GlazeFinish, data: slices, res: Resolution };
             // console.log(jsonarray);
             localStorage.setItem('jsonarray', JSON.stringify(jsonarray));
             router.navigate('src/screens/Checkout');
@@ -236,7 +247,8 @@ export default function Editor() {
 
 
     const loadpreset = () => {
-        setSlices(() => [
+        let random = Math.floor(Math.random() * 3 + 0);
+        let preset = [[
             { position: [0, 0, 0], width: 0, height: 0 },
             { position: [0, 0, 0], width: 0.25, height: 0 },
             { position: [0, 0, 0], width: 0.27, height: 0.125 },
@@ -248,9 +260,49 @@ export default function Editor() {
             { position: [0, 0, 0], width: 0.4, height: 0.125 },
             { position: [0, 0, 0], width: 0.125, height: 0.125 },
             { position: [0, 0, 0], width: 0.25, height: 0.125 },
+        ], [
+            { position: [0, 0, 0], width: 0, height: 0 },
+            { position: [0, 0, 0], width: 0.8, height: 0 },
+            { position: [0, 0, 0], width: 1, height: 0.5 },
+            { position: [0, 0, 0], width: 0.8, height: 0.25 },
+            { position: [0, 0, 0], width: 0.25, height: 0.25 },
+            { position: [0, 0, 0], width: 0.5, height: 0.25 },
+
+        ], [
+            { position: [0, 0, 0], width: 0, height: 0 },
+            { position: [0, 0, 0], width: 0.4, height: 0 },
+            { position: [0, 0, 0], width: 0.95, height: 0.9 },
+            { position: [0, 0, 0], width: 0.4, height: 0.8 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: .2, height: 1 },
+            { position: [0, 0, 0], width: 0.9, height: 0.5 },
+        ]];
+
+        setSlices(() => preset[random]);
+        // setSlices(() => [
+        //     { position: [0, 0, 0], width: 0, height: 0 },
+        //     { position: [0, 0, 0], width: 0.25, height: 0 },
+        //     { position: [0, 0, 0], width: 0.27, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.35, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.43, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.51, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.59, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.60, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.4, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.125, height: 0.125 },
+        //     { position: [0, 0, 0], width: 0.25, height: 0.125 },
+        // ]);
 
 
-        ]);
+
+
+
         /*
         
                 { position: [0, 0, 0], width: 0, height: 0 },
@@ -402,7 +454,10 @@ export default function Editor() {
 
 function Myvase({ slices }) {
     let pos = [0, 0, 0];
-    const vase = new Vase(pos, 128, []);
+    let res = 128;
+    //console.log(Resolution);
+    //TODO:: ADD RESOLUTION TO THE SAVED THINGIES 
+    const vase = new Vase(pos, Resolution.value, []);
     vase.addSlice([0, 0, 0], 0, 0);
     // Add slices based on the state
     if (slices && slices.length > 0)
@@ -414,6 +469,11 @@ function Myvase({ slices }) {
 
     vase.setTextureindex(GlazeFinish.value);
     vase.sethovermode(1);
+
+    if (!Rotating.checked) {
+        vase.sethovermode(0);
+    }
+
     vase.setmeterialindex(1);
     vase.render();
 

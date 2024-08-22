@@ -6,6 +6,7 @@ import {
   TextInput,
   Pressable,
   CheckBox,
+  Image,
 } from "react-native";
 
 import { TabView } from 'react-native-tab-view';
@@ -19,7 +20,7 @@ import axios from 'axios';
 const UserNameInput = React.memo(({ value, onChangeText }) => {
   return (
     <TextInput
-      style={styles.input}
+      style={[styles.input]}
       value={value}
       onChangeText={onChangeText}
     />
@@ -88,7 +89,11 @@ const LoginScene = React.memo(({ name, setName, password, setPassword, errors, i
 const AboutUsScene = React.memo(({ next }) => {
   return (
     <View style={[styles.ScrollView]}>
-      <Text style={styles.title}>Project Clay</Text>
+      <Image
+        source={require('../../../Public/glazitnewlogo.png')}
+        // Replace with your actual logo path
+        style={[styles.logo, { marginBottom: 30 }]}
+      />
       <Text style={styles.subtitle}>
         A cross-platform clay creation app for designing pottery, streamlining your creative process, and commissioning your designs from preferred shops.
       </Text>
@@ -97,8 +102,12 @@ const AboutUsScene = React.memo(({ next }) => {
         Contributors:
       </Text>
       <Text style={styles.subtitle}>
-        Omar Almasri || Oops SDK
+        Tuleen Almasri || 3200124
       </Text >
+      <Text style={[styles.subtitle, styles.marginTop]}>
+        Supervisor: Dr. Abdullah Alhaj
+      </Text>
+
 
       <Pressable style={[styles.btn, styles.marginTop]} onPress={next}>
         <Text style={styles.buttonText}>Next {'>>>'}</Text>

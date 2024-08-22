@@ -40,7 +40,8 @@ function MyCamera() {
     <PerspectiveCamera
 
       fov={50}
-      position={[1, 0.8, 3]} // Set the camera's position
+      // position={[1, 0.8, 3]} // Set the camera's position
+      position={[0.5, 0.6, 2]} // Set the camera's position
       rotation={[-0.2, 0, 0]} // Set the camera's rotation
       near={0.1} // Set the near clipping plane
       far={1000} // Set the far clipping plane

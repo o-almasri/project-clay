@@ -11,7 +11,7 @@ const NavMenu = () => {
         <View style={styles.navcontainer}>
             <Pressable style={styles.navItem} onPress={() => { router.navigate(''); }}>
                 <Image
-                    source={require('../../../Public/glazeitlogo.png')}
+                    source={require('../../../Public/glazitnewlogo.png')}
                     // Replace with your actual logo path
                     style={styles.logo}
                 />

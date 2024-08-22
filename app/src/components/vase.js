@@ -141,6 +141,9 @@ class Vase {
     sethovermode = (num) => {
         this.mode = num;
     };
+    setwidth = (num) => {
+        this.width = num;
+    };
 
     render() {
         //const texture = useTexture(this.state.texturePath);
