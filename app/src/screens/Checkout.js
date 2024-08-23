@@ -143,8 +143,10 @@ export default function Checkout() {
         vase.setTextureindex(texture);
         settextureName(vase.getTextureName(texture));
         vase.sethovermode(0);
-        vase.render();
+        vase.setmeterialindex(materialindex);
 
+
+        vase.render();
         return vase.getMesh2();
     }
 
@@ -167,6 +169,7 @@ export default function Checkout() {
             texture: texture,
             size: radio * 5,
             resolution: res,
+            matt: materialindex,
             type: 1, // 1 for vase , 2 for sandvase , 3 for shirt
             data: JSON.stringify(slices), // parse data as JSON
         };

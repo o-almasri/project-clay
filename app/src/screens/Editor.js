@@ -70,7 +70,7 @@ export default function Editor() {
             localStorage.removeItem('ordernumber');
         }
     }, [userId]);
-    const { width, height, GlazeFinish, Camera_Y, Camera_Z, Resolution, Rotating } = useControls({
+    const { width, height, GlazeFinish, Camera_Y, Camera_Z, Resolution, Rotating, Material } = useControls({
         width: { value: 0.5, min: 0.05, max: 0.8 },
         height: { value: 0.125, min: 0.01, max: 0.3 },
         Load_Preset: button(() => {
@@ -102,8 +102,9 @@ export default function Editor() {
             max: 64,
             step: 4
         },
-        Rotating: true
+        Rotating: true,
 
+        Material: { value: 1, min: 1, max: 3, step: 1 },
     });
 
     function saveobject() {
@@ -113,7 +114,7 @@ export default function Editor() {
             // texture is texture 
             // data is slices data 
             //resolution is how many points per circle
-            let jsonarray = { materialindex: 1, texture: GlazeFinish, data: slices, res: Resolution };
+            let jsonarray = { materialindex: Material, texture: GlazeFinish, data: slices, res: Resolution };
             // console.log(jsonarray);
             localStorage.setItem('jsonarray', JSON.stringify(jsonarray));
             router.navigate('src/screens/Checkout');
@@ -474,7 +475,7 @@ function Myvase({ slices }) {
         vase.sethovermode(0);
     }
 
-    vase.setmeterialindex(1);
+    vase.setmeterialindex(Material.value);
     vase.render();
 
     return vase.getMesh2();
