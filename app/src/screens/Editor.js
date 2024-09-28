@@ -80,7 +80,7 @@ export default function Editor() {
             randomize();
         }),
 
-        GlazeFinish: { value: 1, min: 1, max: 4, step: 1 },
+        GlazeFinish: { value: 1, min: 1, max: 9, step: 1 },
 
 
         Camera_Y: {
@@ -98,13 +98,13 @@ export default function Editor() {
         },
         Resolution: {
             value: 64,
-            min: 4,  // Different minimum values for y and z
+            min: 3,  // Different minimum values for y and z
             max: 64,
             step: 4
         },
         Rotating: true,
 
-        Material: { value: 1, min: 1, max: 3, step: 1 },
+        Material: { value: 1, min: 1, max: 4, step: 1 },
     });
 
     function saveobject() {
@@ -271,18 +271,9 @@ export default function Editor() {
 
         ], [
             { position: [0, 0, 0], width: 0, height: 0 },
-            { position: [0, 0, 0], width: 0.4, height: 0 },
-            { position: [0, 0, 0], width: 0.95, height: 0.9 },
-            { position: [0, 0, 0], width: 0.4, height: 0.8 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: .2, height: 1 },
-            { position: [0, 0, 0], width: 0.9, height: 0.5 },
+            { position: [0, 0, 0], width: 0.35, height: 0.01 },
+            { position: [0, 0, 0], width: 0.5, height: 0.02 },
+            { position: [0, 0, 0], width: 0.5, height: 0.01 },
         ]];
 
         setSlices(() => preset[random]);

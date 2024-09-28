@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: windowWidth <= 900 ? "100%" : "30%",
-    height: "50%",
+    height: "52%",
     backgroundColor: colors.white,
     padding: "1%",
     borderRadius: 20,

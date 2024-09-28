@@ -51,7 +51,7 @@ export default function Selection() {
     const [slices, setSlices] = useState([]);
     const [slices2, setSlices2] = useState([]);
     const [slices3, setSlices3] = useState([]);
-    const numCubes = 3; // Number of cubes
+    const numCubes = 5; // Number of cubes
     const radius = 1.5; // Radius of the circle
     const [userId, setUserId] = useState(null);
 

@@ -743,6 +743,28 @@ class Vase {
 
                 </mesh>
             );
+        } else if (this.material == 4) {
+            return (
+                <mesh ref={this.meshRef} geometry={geometry} castShadow >
+
+                    <meshStandardMaterial
+                        attach="material"
+                        map={objtexture.map}
+                        normalMap={objtexture.normalMap}
+                        roughnessMap={objtexture.roughnessMap}
+                        aoMap={objtexture.aoMap}
+                        color={0xffffff}
+                        roughness={5}//0.5
+                        metalness={0.5}//0.5
+                        side={DoubleSide}
+                        wireframe={true}          // Enable wireframe mode
+                        wireframeLinewidth={1}
+                        transparent={true}
+                        opacity={1}
+                    />
+                </mesh>
+
+            );
         } else
             return (
                 <mesh ref={this.meshRef} geometry={geometry} castShadow >
